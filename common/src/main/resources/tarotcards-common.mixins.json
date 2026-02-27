@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "io.github.suel_ki.tarotcards.core.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "FoodDataMixin",
+    "ItemStackMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin",
+    "access.SimpleContainerAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

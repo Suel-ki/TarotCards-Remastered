@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.suel_ki.tarotcards.core.mixin.fabric",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "ExperienceOrbMixin",
+    "LivingEntityMixin",
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

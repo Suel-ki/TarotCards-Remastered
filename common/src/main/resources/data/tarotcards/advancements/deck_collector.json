@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "tarotcards:tarot_deck"
+    },
+    "title": {
+      "translate": "advancements.tarotcards.deck_collector.title"
+    },
+    "description": {
+      "translate": "advancements.tarotcards.deck_collector.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "tarotcards:progression/root",
+  "criteria": {
+    "complete_deck": {
+      "trigger": "tarotcards:deck_collection",
+      "conditions": {
+        "count": 22
+      }
+    }
+  }
+}
