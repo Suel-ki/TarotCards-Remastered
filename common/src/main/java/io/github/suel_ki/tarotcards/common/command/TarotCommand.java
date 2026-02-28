@@ -35,12 +35,16 @@ public class TarotCommand {
     }
 
     private static int setDeckSize(CommandSourceStack source, ServerPlayer player, int size) {
-        ((TarotPlayerAccess) player).tarotcards$setDeckSize(size);
-        source.sendSuccess(() -> Component.translatable("commands.tarotcards.decksize.set", player.getDisplayName(), size), true);
         if (!TarotCards.CONFIG.per_player_deck_size) {
             source.sendFailure(Component.translatable("commands.tarotcards.decksize.warning"));
             return -1;
         }
+        if (size < 0 || size > 22) {
+            source.sendFailure(Component.translatable("commands.tarotcards.decksize.invalid"));
+            return -1;
+        }
+        ((TarotPlayerAccess) player).tarotcards$setDeckSize(size);
+        source.sendSuccess(() -> Component.translatable("commands.tarotcards.decksize.set", player.getDisplayName(), size), true);
         return 1;
     }
 }
