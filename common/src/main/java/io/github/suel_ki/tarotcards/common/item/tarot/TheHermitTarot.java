@@ -2,6 +2,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.compat.FTBTeamCompat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
@@ -41,7 +43,24 @@ public class TheHermitTarot extends TarotItem {
     }
 
     private boolean hasNearbyAllies(Player player) {
-        return player.level().getNearbyEntities(LivingEntity.class, TargetingConditions.forNonCombat().ignoreLineOfSight(), player, player.getBoundingBox().inflate(TarotCards.CONFIG.cards.the_hermit_allyrange)).stream().anyMatch(e -> e.isAlliedTo(player));
+        double range = TarotCards.CONFIG.cards.the_hermit_allyrange;
+        AABB area = player.getBoundingBox().inflate(range);
+
+        TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight();
+
+        List<LivingEntity> entities = player.level().getNearbyEntities(LivingEntity.class, targeting, player, area);
+
+        for (LivingEntity e : entities) {
+            if (e.isAlliedTo(player)) {
+                return true;
+            }
+            if (e instanceof Player ePlayer) {
+                if (FTBTeamCompat.isSameTeamSafe(player, ePlayer)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 	@Override
