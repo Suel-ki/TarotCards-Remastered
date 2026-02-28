@@ -40,16 +40,24 @@ public class TarotConfig extends Config {
         public double judgement_damagechance = 0.15D;
         @ValidatedDouble.Restrict(min = 0D, max = 100D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double justice_damagemultiplier = 0.25D;
+        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public int strength_amplifier = 1;
         @ValidatedDouble.Restrict(min = 0D, max = 1D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double temperance_reduction = 0.25D;
+        @ValidatedDouble.Restrict(min = 0D, max = 100D, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public double wheel_of_fortune_luckbonus = 3D;
         @ValidatedDouble.Restrict(min = 0D, max = 1D, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public double the_tower_damagenegation = 0.1D;
+        public double the_tower_damagenegation = 1D;
         @ValidatedDouble.Restrict(min = 0D, max = 100D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_chariot_speedboost = 0.2D;
         @ValidatedDouble.Restrict(min = 0D, max = 256D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_empress_range = 3D;
+        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public int the_emperpor_heroofvillagebonus = 2;
         @ValidatedDouble.Restrict(min = 0D, max = 1D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_hanged_man_xpratio = 0.5D;
+        @ValidatedInt.Restrict(min = 0, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public int the_hanged_man_xpcap = 25;
         @ValidatedDouble.Restrict(min = 0D, max = 256D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_hermit_allyrange = 10D;
         @ValidatedDouble.Restrict(min = 0D, max = 100D, type = ValidatedNumber.WidgetType.TEXTBOX)
@@ -62,24 +70,16 @@ public class TarotConfig extends Config {
         public double the_sun_healthboost = 0.25D;
         @ValidatedDouble.Restrict(min = 0D, max = 256D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_world_range = 3D;
+        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public int the_world_slownessamplifier = 3;
         @ValidatedDouble.Restrict(min = 0D, max = 256D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_lovers_range = 5D;
-        @ValidatedDouble.Restrict(min = 0D, max = 100D, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public double wheel_of_fortune_luckbonus = 3D;
-        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int strength_amplifier = 1;
-        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int the_devil_weaknessamplifier = 2;
-        @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int the_emperpor_heroofvillagebonus = 2;
-        @ValidatedInt.Restrict(min = 0, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int the_hanged_man_xpcap = 25;
-        @ValidatedInt.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int the_fool_jumpboost = 2;
         @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
         public int the_lovers_regenamplifier = 2;
         @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
-        public int the_world_slownessamplifier = 3;
+        public int the_devil_weaknessamplifier = 2;
+        @ValidatedInt.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
+        public int the_fool_jumpboost = 2;
         @ValidatedInt.Restrict(min = 1, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
         public int the_highpriestess_upgradecost = 3;
         @ValidatedInt.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
