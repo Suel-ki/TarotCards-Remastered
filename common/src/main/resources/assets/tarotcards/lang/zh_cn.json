@@ -70,7 +70,7 @@
   "tarotcards.config.cards": "塔罗牌",
   "tarotcards.config.cards.death_damagebonus.desc": "对生物造成的伤害增加百分比 (0.5 = +50%)",
   "tarotcards.config.cards.judgement_damagechance.desc": "造成双倍伤害的几率百分比 (0.5 = 50%)",
-  "tarotcards.config.cards.the_tower_damagenegation.desc": "抵消掉落伤害的百分比 (0.5 = 50%)",
+  "tarotcards.config.cards.the_tower_damagenegation.desc": "抵消摔落伤害的百分比 (0.5 = 50%)",
   "tarotcards.config.cards.justice_damagemultiplier.desc": "返回给攻击者的伤害百分比 (1.0 = 100%)",
   "tarotcards.config.cards.strength_amplifier.desc": "效果等级 (1 = II)",
   "tarotcards.config.cards.temperance_reduction.desc": "饥饿度增长倍率 (0.5 = -50%, 0 = 无变化)",
@@ -85,7 +85,8 @@
   "tarotcards.config.cards.the_hermit_armorbonus.desc": "远离盟友时增加的护甲值",
   "tarotcards.config.cards.the_hierophant_xpboost.desc": "经验值增加百分比 (2 = +200%)",
   "tarotcards.config.cards.the_highpriestess_capenchants.desc": "当附魔书达到最高等级时停止升级",
-  "tarotcards.config.cards.the_highpriestess_upgrademultiplier.desc": "每级附魔升级所需的消耗 (成本 = 附魔等级 * 此配置值)",
+  "tarotcards.config.cards.the_highpriestess_upgradecost.desc": "每级附魔升级所需的消耗 (成本 = 附魔等级 * 此配置值)",
+  "tarotcards.config.cards.the_highpriestess_extra_levels.desc": "允许附魔书在自然最高等级的基础上额外升级的级数，仅在 capenchants 为开启状态时生效",
   "tarotcards.config.cards.the_lovers_range.desc": "应用生命恢复效果所需的盟友距离",
   "tarotcards.config.cards.the_lovers_regenamplifier.desc": "效果等级 (1 = II)",
   "tarotcards.config.cards.the_star_reachboost.desc": "触及距离增加百分比 (0.5 = +50%)",
@@ -95,5 +96,8 @@
   "tarotcards.config.cards.wheel_of_fortune_luckbonus.desc": "为玩家增加的幸运值（非时运）",
 
   "curios.identifier.tarot": "塔罗牌",
-  "trinkets.slot.tarotcards.tarot": "塔罗牌"
+  "trinkets.slot.tarotcards.tarot": "塔罗牌",
+
+  "modmenu.nameTranslation.tarotcards": "塔罗牌",
+  "modmenu.descriptionTranslation.tarotcards": "添加了 22 张大阿卡纳塔罗牌，并提供独一无二的被动能力"
 }
