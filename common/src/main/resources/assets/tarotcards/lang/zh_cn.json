@@ -73,7 +73,7 @@
   "tarotcards.config.cards.the_tower_damagenegation.desc": "抵消摔落伤害的百分比 (0.5 = 50%)",
   "tarotcards.config.cards.justice_damagemultiplier.desc": "返回给攻击者的伤害百分比 (1.0 = 100%)",
   "tarotcards.config.cards.strength_amplifier.desc": "效果等级 (1 = II)",
-  "tarotcards.config.cards.temperance_reduction.desc": "饥饿度增长倍率 (0.5 = -50%, 0 = 无变化)",
+  "tarotcards.config.cards.temperance_reduction.desc": "饥饿值增长倍率 (0.5 = -50%, 0 = 无变化)",
   "tarotcards.config.cards.the_chariot_speedboost.desc": "基础速度增加百分比 (0.5 = +50%)",
   "tarotcards.config.cards.the_devil_weaknessamplifier.desc": "效果等级 (1 = II)",
   "tarotcards.config.cards.the_emperpor_heroofvillagebonus.desc": "效果等级 (1 = II)",
