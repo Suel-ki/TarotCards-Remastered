@@ -58,6 +58,7 @@
   "commands.tarotcards.decksize.invalid": "Invalid deck size. Please enter a value between 0 and 22",
 
   "tarotcards.config.tick_rate.desc": "How many ticks it takes to check if a player has a tarot or not, more = more performace but longer time to activate/deactivate effects",
+  "tarotcards.config.per_player_deck_size.desc": "Allows individual player deck sizes to override the global setting. In this mode, tarot_deck_size is used as the default value.",
   "tarotcards.config.tarot_deck_size.desc": "The maximum capacity of the tarot deck, determines the number of active slots in the deck gui (0-22).",
   "tarotcards.config.require_card_in_curio.desc": "Requires the card to be in your curio slot, or in the tarot deck (also in the curio slot) to function",
   "tarotcards.config.tarot_deck_applies_effects.desc": "If cards in the tarot deck apply their effects to the player holding it",

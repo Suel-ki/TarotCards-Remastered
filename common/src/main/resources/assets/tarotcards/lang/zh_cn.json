@@ -59,6 +59,7 @@
 
   "tarotcards.config.tick_rate.desc": "检查玩家是否拥有塔罗牌所需的 tick 数，数值越大性能越好，但启用/禁用效果的时间越长",
   "tarotcards.config.tarot_deck_size.desc": "塔罗牌组的最大容量，决定了卡组gui中可激活的槽位数量 (0-22)",
+  "tarotcards.config.per_player_deck_size.desc": "允许玩家拥有独立的牌组容量，此时 tarot_deck_size 将作为默认值",
   "tarotcards.config.require_card_in_curio.desc": "需要卡牌位于饰品栏，或位于塔罗牌组（同样在饰品栏内）中才能发挥作用",
   "tarotcards.config.tarot_deck_applies_effects.desc": "塔罗牌组内的卡牌是否对持有它的玩家应用效果",
 
