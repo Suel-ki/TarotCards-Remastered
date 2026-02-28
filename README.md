@@ -14,7 +14,8 @@
 </div>
 
 ## About
-Find each of the 22 cards throughout the world, and receive their bonus by just carrying them! This small mod just adds the cards and their abilities. You can't craft them but instead you find them all in loot chests, such as buried treasure, shipwrecks, dungeons, and more.
+- This is the officially authorized continuation of the original [TarotCards](https://github.com/shiroroku/TarotCards), maintained and updated with the original author's blessing under the [MIT](https://github.com/shiroroku/TarotCards/blob/master/LICENSE).
+- Find each of the 22 cards throughout the world, and receive their bonus by just carrying them! This small mod just adds the cards and their abilities. You can't craft them but instead you find them all in loot chests, such as buried treasure, shipwrecks, dungeons, and more.
 
 ## Changes
 ***The following text in bold italics indicates new or modified content.***
