@@ -62,6 +62,10 @@
   "tarotcards.config.tarot_deck_size.desc": "The maximum capacity of the tarot deck, determines the number of active slots in the deck gui (0-22).",
   "tarotcards.config.require_card_in_curio.desc": "Requires the card to be in your curio slot, or in the tarot deck (also in the curio slot) to function",
   "tarotcards.config.tarot_deck_applies_effects.desc": "If cards in the tarot deck apply their effects to the player holding it",
+  "tarotcards.config.level_lock.desc": "If enabled, players must reach a specific experience level to activate the effects of a tarot card",
+  "tarotcards.config.advancement_lock.desc": "If enabled, players must complete specific advancements to unlock the power of tarot cards",
+  "tarotcards.config.min_xp_level_required.desc": "Define the minimum experience level required for each tarot card",
+  "tarotcards.config.required_advancements.desc": "Maps each tarot card to a specific advancement path. If empty or invalid, no advancement will be required",
 
   "tarotcards.config.loot.default_loot_chance.desc": "Chance a tarot card appears in default loot (0.75 = 75%)(1.0 = there will always be a single tarot card in chests)",
   "tarotcards.config.loot.do_loot_generation.desc": "If Tarot Cards should be added to the default loot tables specified in data",
