@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "tarotcards:the_fool"
+      "count": 1,
+      "id": "tarotcards:the_fool"
     },
     "title": {
       "translate": "advancements.tarotcards.root.title"

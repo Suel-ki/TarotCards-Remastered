@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "tarotcards:tarot_deck"
+		"count": 1,
+		"id": "tarotcards:tarot_deck"
 	}
 }

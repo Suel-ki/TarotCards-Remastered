@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 architectury {
@@ -28,12 +28,6 @@ repositories {
         name = "Ladysnake Libs"
         url = "https://maven.ladysnake.org/releases"
     }
-    maven {
-        url "https://maven.jamieswhiteshirt.com/libs-release"
-        content {
-            includeGroup "com.jamieswhiteshirt"
-        }
-    }
 }
 
 dependencies {
@@ -45,8 +39,6 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
     modImplementation "me.fzzyhmstrs:fzzy_config:${fzzyconfig_version}"
     modCompileOnly "curse.maven:ftb-teams-fabric-438497:${ftbteam_fabric_id}"
-
-    include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${reach_attributes_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

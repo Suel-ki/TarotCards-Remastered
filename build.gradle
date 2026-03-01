@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.10-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
 }
 
 architectury {
@@ -59,6 +59,17 @@ allprojects {
                 includeGroup "curse.maven"
             }
         }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
+        }
         maven {
             url = "https://thedarkcolour.github.io/KotlinForForge/"
         }
@@ -77,8 +88,9 @@ allprojects {
                 'mod_id'                       : mod_id,
                 'license'                      : license,
                 'description'                  : project.description,
-                "forge_version"                : forge_version,
-                "forge_loader_version_range"   : forge_loader_version_range,
+                "neo_version"                : neo_version,
+                "neo_version_range"   : neo_version_range,
+                "neo_loader_version_range"   : neo_loader_version_range,
                 'credits'                      : credits,
                 'java_version'                 : java_version
         ]
@@ -87,7 +99,7 @@ allprojects {
             key, value -> [(key): value instanceof String ? value.replace("\n", "\\\\n") : value]
         }
 
-        filesMatching(['META-INF/mods.toml']) {
+        filesMatching(['META-INF/neoforge.mods.toml']) {
             expand expandProps
         }
 
@@ -98,9 +110,11 @@ allprojects {
         inputs.properties(expandProps)
     }
 
+    def javaVersion = project.property("java_version") as Integer
+
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = javaVersion
     }
 
     java {

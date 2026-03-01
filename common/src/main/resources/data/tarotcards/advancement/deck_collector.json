@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "tarotcards:tarot_deck"
+      "count": 1,
+      "id": "tarotcards:tarot_deck"
     },
     "title": {
       "translate": "advancements.tarotcards.deck_collector.title"
