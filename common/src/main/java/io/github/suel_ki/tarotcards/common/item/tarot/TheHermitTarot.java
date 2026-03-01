@@ -28,8 +28,8 @@ public class TheHermitTarot extends TarotItem {
 
     private static final Supplier<AttributeModifier> attribute = () -> new AttributeModifier(HERMIT_UUID, "Tarot Card", TarotCards.CONFIG.cards.the_hermit_armorbonus, AttributeModifier.Operation.ADDITION);
 
-    protected boolean checkExtraConditions(Player player) {
-        return !hasNearbyAllies(player);
+    public boolean checkExtraConditions(Player player) {
+        return !hasNearbyAllies(player) && super.checkExtraConditions(player);
     }
 
     @Override

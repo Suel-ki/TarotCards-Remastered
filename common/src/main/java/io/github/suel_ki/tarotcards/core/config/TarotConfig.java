@@ -1,13 +1,21 @@
 package io.github.suel_ki.tarotcards.core.config;
 
 import io.github.suel_ki.tarotcards.TarotCards;
+import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
+import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedIdentifierMap;
+import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedString;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedDouble;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedNumber;
+import net.minecraft.core.registries.BuiltInRegistries;
+
+import java.util.LinkedHashMap;
 
 @Translation(prefix = "tarotcards.config")
 public class TarotConfig extends Config {
@@ -22,6 +30,20 @@ public class TarotConfig extends Config {
     public boolean per_player_deck_size = false;
     public boolean require_card_in_curio = false;
     public boolean tarot_deck_applies_effects = true;
+    public boolean level_lock = false;
+    public boolean advancement_lock = false;
+
+    public ValidatedIdentifierMap<Integer> min_xp_level_required = new ValidatedIdentifierMap<>(
+            new LinkedHashMap<>(),
+            ValidatedIdentifier.ofTag(BuiltInRegistries.ITEM.getKey(ItemInit.the_fool.get()), TarotItem.TAROT),
+            new ValidatedInt(0, Integer.MAX_VALUE, 0).instanceEntry()
+    );
+
+    public ValidatedIdentifierMap<String> required_advancements = new ValidatedIdentifierMap<>(
+            new LinkedHashMap<>(),
+            ValidatedIdentifier.ofTag(BuiltInRegistries.ITEM.getKey(ItemInit.the_fool.get()), TarotItem.TAROT),
+            new ValidatedString("minecraft:story/mine_diamond")
+    );
 
     public Loot loot = new Loot();
     @Translation(prefix = "tarotcards.config.loot")
@@ -34,6 +56,7 @@ public class TarotConfig extends Config {
     public Cards cards = new Cards();
     @Translation(prefix = "tarotcards.config.cards")
     public static class Cards extends ConfigSection {
+
         @ValidatedDouble.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double death_damagebonus = 0.2D;
         @ValidatedDouble.Restrict(min = 0D, max = 1D, type = ValidatedNumber.WidgetType.TEXTBOX)
@@ -84,7 +107,7 @@ public class TarotConfig extends Config {
         public int the_highpriestess_upgradecost = 3;
         @ValidatedInt.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
         public int the_highpriestess_extra_levels = 3;
-        public boolean the_highpriestess_capenchants = true;
+        public boolean the_highpriestess_capenchants = false;
 
     }
 
