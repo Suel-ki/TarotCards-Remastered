@@ -64,13 +64,17 @@ public abstract class TarotItem extends Item {
         return !tarot.getOrCreateTag().getBoolean("deactivated");
     }
 
+    public static void setActivated(ItemStack tarot, boolean activated) {
+        tarot.getOrCreateTag().putBoolean("deactivated", !activated);
+    }
+
     /**
      * Toggles Tarot Card on use.
      */
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack tarot = player.getItemInHand(hand);
-        tarot.getOrCreateTag().putBoolean("deactivated", !tarot.getOrCreateTag().getBoolean("deactivated"));
+        setActivated(tarot, !isActivated(tarot));
         return super.use(level, player, hand);
     }
 
