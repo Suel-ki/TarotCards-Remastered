@@ -47,6 +47,8 @@
   "item.tarotcards.wheel_of_fortune": "Tarot : Wheel of Fortune",
   "item.tarotcards.wheel_of_fortune.desc": "+%d Luck.",
 
+  "tag.item.tarotcards.tarot_cards": "Tarot Cards",
+
   "advancements.tarotcards.root.title": "Deal with Fate",
   "advancements.tarotcards.root.description": "The cards are drawn. Your destiny is no longer written in stone",
   "advancements.tarotcards.deck_collector.title": "Major Arcana Collector",
@@ -63,6 +65,7 @@
   "tarotcards.config.require_card_in_curio.desc": "Requires the card to be in your curio slot, or in the tarot deck (also in the curio slot) to function",
   "tarotcards.config.tarot_deck_applies_effects.desc": "If cards in the tarot deck apply their effects to the player holding it",
 
+  "tarotcards.config.loot.target_loots.desc": "Tarot cards will generate in the loot tables from this list (fabric only)",
   "tarotcards.config.loot.default_loot_chance.desc": "Chance a tarot card appears in default loot (0.75 = 75%)(1.0 = there will always be a single tarot card in chests)",
   "tarotcards.config.loot.do_loot_generation.desc": "If Tarot Cards should be added to the default loot tables specified in data",
 

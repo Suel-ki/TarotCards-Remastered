@@ -47,6 +47,8 @@
   "item.tarotcards.wheel_of_fortune": "塔罗牌：命运之轮",
   "item.tarotcards.wheel_of_fortune.desc": "幸运 +%d。",
 
+  "tag.item.tarotcards.tarot_cards": "塔罗牌",
+
   "advancements.tarotcards.root.title": "与命运博弈",
   "advancements.tarotcards.root.description": "牌局已定，你的命运将不再墨守成规",
   "advancements.tarotcards.deck_collector.title": "大阿卡纳收藏家",
@@ -64,6 +66,7 @@
   "tarotcards.config.tarot_deck_applies_effects.desc": "塔罗牌组内的卡牌是否对持有它的玩家应用效果",
 
   "tarotcards.config.loot": "战利品",
+  "tarotcards.config.loot.target_loots.desc": "塔罗牌将从这个列表的战利品表中生成（仅Fabric）",
   "tarotcards.config.loot.default_loot_chance.desc": "塔罗牌在默认战利品中出现的几率 (0.75 = 75%)(1.0 = 箱子中总会有一张塔罗牌)",
   "tarotcards.config.loot.do_loot_generation.desc": "是否应将塔罗牌添加到数据中指定的默认战利品表",
 

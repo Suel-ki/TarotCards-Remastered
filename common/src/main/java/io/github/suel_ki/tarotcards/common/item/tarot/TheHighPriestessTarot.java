@@ -3,6 +3,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,8 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-
-import java.util.Map;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 public class TheHighPriestessTarot extends TarotItem {
 
@@ -29,7 +29,7 @@ public class TheHighPriestessTarot extends TarotItem {
                 return;
             }
 
-            Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(upgradable_item);
+            ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(upgradable_item);
 
             if (enchantments.isEmpty()) return;
 
@@ -37,9 +37,11 @@ public class TheHighPriestessTarot extends TarotItem {
             int extraLevels = TarotCards.CONFIG.cards.the_highpriestess_extra_levels;
             boolean capEnchs = TarotCards.CONFIG.cards.the_highpriestess_capenchants;
 
-            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                Enchantment ench = entry.getKey();
-                int currentLvl = entry.getValue();
+            ItemEnchantments.Mutable mutableEnchants = new ItemEnchantments.Mutable(enchantments);
+
+            for (Holder<Enchantment> enchHolder : enchantments.keySet()) {
+                Enchantment ench = enchHolder.value();
+                int currentLvl = enchantments.getLevel(enchHolder);
 
                 int finalMaxLevel = capEnchs ? (ench.getMaxLevel() + extraLevels) : ench.getMaxLevel();
 
@@ -49,13 +51,13 @@ public class TheHighPriestessTarot extends TarotItem {
 
                     if (player.experienceLevel >= cost && cost > 0) {
                         TarotCards.LOGGER.debug("{} - Enchantment upgrade", ItemInit.the_high_priestess.get());
-                        TarotCards.LOGGER.debug("From: {}, To: {}, Cost: {}", ench.getDescriptionId(), currentLvl + 1, cost);
+                        TarotCards.LOGGER.debug("From: {}, To: {}, Cost: {}", enchHolder.getRegisteredName(), currentLvl + 1, cost);
 
                         player.giveExperienceLevels(-cost);
                         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                                 SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.5F, 1.5F);
-                        enchantments.put(ench, currentLvl + 1);
-                        EnchantmentHelper.setEnchantments(enchantments, upgradable_item);
+                        mutableEnchants.set(enchHolder, currentLvl + 1);
+                        EnchantmentHelper.setEnchantments(upgradable_item, mutableEnchants.toImmutable());
                         break;  //Get the first valid enchantment to level up
                     }
                 }

@@ -7,6 +7,7 @@ import io.github.suel_ki.tarotcards.common.menu.TarotDeckMenu;
 import io.github.suel_ki.tarotcards.core.init.TriggerInit;
 import io.github.suel_ki.tarotcards.core.platform.RegisterPlatform;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -26,6 +27,8 @@ public class TarotCards {
 
     public static final Supplier<MenuType<TarotDeckMenu>> TAROT_DECK_MENU = RegisterPlatform.registerMenuType("tarot_deck", TarotDeckMenu::new);
 
+    public static final Supplier<DataComponentType<Boolean>> ACTIVATED = RegisterPlatform.registerDataComponent("activated");
+
     public static TarotConfig CONFIG = ConfigApiJava.registerAndLoadConfig(TarotConfig::new);
 
     public static void init() {
@@ -35,6 +38,6 @@ public class TarotCards {
     }
 
     public static ResourceLocation id(String name) {
-        return new ResourceLocation(MOD_ID, name);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
     }
 }

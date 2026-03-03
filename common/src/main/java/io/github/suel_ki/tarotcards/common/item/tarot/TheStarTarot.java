@@ -2,40 +2,34 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
-import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 
 public class TheStarTarot extends TarotItem {
 
-    private static final UUID STAR_UUID = UUID.nameUUIDFromBytes("TarotStar".getBytes(StandardCharsets.UTF_8));
+    private static final ResourceLocation STAR = TarotCards.id("the_star");
 
     @Override
-    protected Attribute getTargetAttribute() {
-        return TarotUtilPlatform.BLOCK_REACH().get();
+    protected Holder<Attribute> getTargetAttribute() {
+        return Attributes.BLOCK_INTERACTION_RANGE;
     }
 
     @Override
     protected AttributeModifier getModifier() {
-        double percent = TarotCards.CONFIG.cards.the_star_reachboost;
-
-        double absoluteBonus = 4.5 * percent;
-
-        return new AttributeModifier(STAR_UUID, "Tarot Card", absoluteBonus, AttributeModifier.Operation.ADDITION);
+        return new AttributeModifier(STAR, TarotCards.CONFIG.cards.the_star_reachboost, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 
     @Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.the_star_reachboost * 100).withStyle(ChatFormatting.BLUE));
 	}
 

@@ -4,12 +4,9 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.access.TarotPlayerAccess;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.init.TriggerInit;
-import io.github.suel_ki.tarotcards.core.mixin.access.SimpleContainerAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +25,6 @@ public class TarotDeckMenu extends AbstractContainerMenu {
 
     private final SimpleContainer deckInventory;
 
-    public TarotDeckMenu(int id, Inventory inv, FriendlyByteBuf data) {
-        this(id, inv, data.readItem());
-    }
-
     public TarotDeckMenu(int id, Inventory inv, ItemStack deck) {
         super(TarotCards.TAROT_DECK_MENU.get(), id);
         this.deck = deck;
@@ -38,12 +32,12 @@ public class TarotDeckMenu extends AbstractContainerMenu {
             @Override
             public void setChanged() {
                 super.setChanged();
-                saveToNbt(deck);
+                saveToItem();
                 checkAndTriggerAdvancement(inv.player);
             }
         };
 
-        loadFromNbt(deck);
+        loadFromItem();
 
         int deckSize = ((TarotPlayerAccess) inv.player).tarotcards$getDeckSize();
 
@@ -90,18 +84,13 @@ public class TarotDeckMenu extends AbstractContainerMenu {
         }
     }
 
-    private void loadFromNbt(ItemStack stack) {
-        CompoundTag compound = stack.getOrCreateTag();
-        if (compound.contains("TarotDeckInventory")) {
-            ContainerHelper.loadAllItems(compound.getCompound("TarotDeckInventory"), ((SimpleContainerAccessor)deckInventory).getItems());
-        }
+    private void loadFromItem() {
+        ItemContainerContents contents = this.deck.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        contents.copyInto(this.deckInventory.getItems());
     }
 
-    private void saveToNbt(ItemStack stack) {
-        CompoundTag compound = stack.getOrCreateTag();
-        CompoundTag invTag = new CompoundTag();
-        ContainerHelper.saveAllItems(invTag, ((SimpleContainerAccessor)deckInventory).getItems());
-        compound.put("TarotDeckInventory", invTag);
+    private void saveToItem() {
+        this.deck.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.deckInventory.getItems()));
     }
 
     private void checkAndTriggerAdvancement(Player player) {
@@ -127,8 +116,9 @@ public class TarotDeckMenu extends AbstractContainerMenu {
             this.deckSize = deckSize;
         }
 
+        @Override
         public boolean mayPlace(ItemStack stack) {
-            if (this.index >= deckSize) {
+            if (this.getContainerSlot() >= deckSize) {
                 return false;
             }
             return canPut(stack);
@@ -136,13 +126,17 @@ public class TarotDeckMenu extends AbstractContainerMenu {
 
         @Override
         public boolean isActive() {
-            return this.index < deckSize;
+            return this.getContainerSlot() < deckSize;
         }
 
         private boolean canPut(ItemStack stack) {
-            if (!stack.is(TarotItem.TAROT))
-                return false;
-            return ((SimpleContainerAccessor)container).getItems().stream().noneMatch(s -> (s.is(stack.getItem())));
+            if (!stack.is(TarotItem.TAROT)) return false;
+            for(int i = 0; i < container.getContainerSize(); i++) {
+                if (container.getItem(i).is(stack.getItem())) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
@@ -178,7 +172,7 @@ public class TarotDeckMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return !player.isRemoved() && (player.getMainHandItem() == deck || player.getOffhandItem() == deck);
+        return !player.isRemoved() && (player.getMainHandItem().is(deck.getItem()) || player.getOffhandItem().is(deck.getItem()));
     }
 
 }

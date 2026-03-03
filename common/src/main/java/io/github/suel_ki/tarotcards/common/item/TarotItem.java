@@ -4,11 +4,9 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -24,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +36,7 @@ public abstract class TarotItem extends Item {
     public static final List<TarotItem> ITEMS_CARDS = new ArrayList<>();
 
     public TarotItem() {
-        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
+        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).component(TarotCards.ACTIVATED.get(), true));
         ITEMS_CARDS.add(this);
     }
 
@@ -50,7 +49,7 @@ public abstract class TarotItem extends Item {
      * If the Tarot Card is active (Using toggles Tarot Card)
      */
     public static boolean isActivated(ItemStack tarot) {
-        return !tarot.getOrCreateTag().getBoolean("deactivated");
+        return tarot.getOrDefault(TarotCards.ACTIVATED.get(), true);
     }
 
     /**
@@ -59,7 +58,9 @@ public abstract class TarotItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack tarot = player.getItemInHand(hand);
-        tarot.getOrCreateTag().putBoolean("deactivated", !tarot.getOrCreateTag().getBoolean("deactivated"));
+        if (!level.isClientSide) {
+            tarot.set(TarotCards.ACTIVATED.get(), !isActivated(tarot));
+        }
         return super.use(level, player, hand);
     }
 
@@ -103,16 +104,13 @@ public abstract class TarotItem extends Item {
     private static boolean checkCardInDeck(ItemStack deck, Item tarot) {
         if (!TarotCards.CONFIG.tarot_deck_applies_effects) return false;
 
-        CompoundTag nbt = deck.getTag();
-        if (nbt != null && nbt.contains("TarotDeckInventory")) {
-            ListTag list = nbt.getCompound("TarotDeckInventory").getList("Items", Tag.TAG_COMPOUND);
-            String targetId = BuiltInRegistries.ITEM.getKey(tarot).toString();
-            for (int i = 0; i < list.size(); i++) {
-                CompoundTag itemTag = list.getCompound(i);
-                if (itemTag.getString("id").equals(targetId)) {
-                    ItemStack cardInDeck = ItemStack.of(itemTag);
-                    return isActivated(cardInDeck);
-                }
+        if (!deck.has(DataComponents.CONTAINER)) return false;
+
+        ItemContainerContents contents = deck.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+
+        for (ItemStack stack : contents.nonEmptyItems()) {
+            if (stack.is(tarot)) {
+                return isActivated(stack);
             }
         }
         return false;
@@ -141,32 +139,32 @@ public abstract class TarotItem extends Item {
         AttributeModifier mod = getModifier();
         if (mod == null) return; // Not all cards might have attribute modifiers
 
-        Attribute targetAttr = getTargetAttribute();
+        Holder<Attribute> targetAttr = getTargetAttribute();
         if (targetAttr == null) return;
 
         AttributeInstance inst = player.getAttribute(getTargetAttribute());
         if (inst == null) return;
 
-        boolean hasMod = inst.hasModifier(mod);
+        boolean hasMod = inst.hasModifier(mod.id());
 
         if (hasCard && !hasMod) {
             inst.addTransientModifier(mod);
             onModifierAdded(player, targetAttr);
-            TarotCards.LOGGER.debug("Added modifier {} to player {}", mod.getName(), player.getName().getString());
+            TarotCards.LOGGER.debug("Added modifier {} to player {}", mod.id(), player.getName().getString());
         } else if (!hasCard && hasMod) {
-            inst.removeModifier(mod.getId());
+            inst.removeModifier(mod.id());
             onModifierRemoved(player, targetAttr);
-            TarotCards.LOGGER.debug("Removed modifier {} from player {}", mod.getName(), player.getName().getString());
+            TarotCards.LOGGER.debug("Removed modifier {} from player {}", mod.id(), player.getName().getString());
         }
     }
 
     // Default implementations return null.
     // Subclasses only override these if they actually need attributes.
-    protected Attribute getTargetAttribute() { return null; }
+    protected Holder<Attribute> getTargetAttribute() { return null; }
     protected AttributeModifier getModifier() { return null; }
 
-    protected void onModifierAdded(Player player, Attribute attr) {}
-    protected void onModifierRemoved(Player player, Attribute attr) {}
+    protected void onModifierAdded(Player player, Holder<Attribute> attr) {}
+    protected void onModifierRemoved(Player player, Holder<Attribute> attr) {}
 
     // Optional: for cards with unique logic
     protected void handleExtraLogic(Player player, boolean hasCard) {}
@@ -192,7 +190,7 @@ public abstract class TarotItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable(this.getDescriptionId() + ".desc").withStyle(ChatFormatting.BLUE));
     }
 

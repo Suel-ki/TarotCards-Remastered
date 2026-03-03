@@ -1,6 +1,7 @@
 package io.github.suel_ki.tarotcards.core.config;
 
 import io.github.suel_ki.tarotcards.TarotCards;
+import me.fzzyhmstrs.fzzy_config.annotations.RootConfig;
 import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
@@ -9,6 +10,7 @@ import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedNumber;
 
+@RootConfig
 @Translation(prefix = "tarotcards.config")
 public class TarotConfig extends Config {
     public TarotConfig() {

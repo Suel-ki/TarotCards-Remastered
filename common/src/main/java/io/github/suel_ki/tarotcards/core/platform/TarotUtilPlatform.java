@@ -6,22 +6,19 @@ import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import static io.github.suel_ki.tarotcards.common.item.TarotItem.isActivated;
 
@@ -34,11 +31,6 @@ public class TarotUtilPlatform {
 
     @ExpectPlatform
     public static void openTarotMenu(ServerPlayer player, ItemStack stack) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Supplier<Attribute> BLOCK_REACH() {
         throw new AssertionError();
     }
 
@@ -80,21 +72,11 @@ public class TarotUtilPlatform {
         }
 
         // Check tarot deck for card if config allows it
-        if (deckStack != null && TarotCards.CONFIG.tarot_deck_applies_effects) {
-            CompoundTag nbt = deckStack.getTag();
-            // Check if the NBT contains the inventory data
-            if (nbt != null && nbt.contains("TarotDeckInventory")) {
-                ListTag listTag = nbt.getCompound("TarotDeckInventory").getList("Items", Tag.TAG_COMPOUND);
-
-                for (int i = 0; i < listTag.size(); i++) {
-                    CompoundTag itemTag = listTag.getCompound(i);
-                    // Light check to see if it's a tarot card before full parsing
-                    if (itemTag.getString("id").contains("tarot")) {
-                        ItemStack innerStack = ItemStack.of(itemTag);
-                        if (innerStack.getItem() instanceof TarotItem && isActivated(innerStack)) {
-                            activeCards.add(innerStack.getItem());
-                        }
-                    }
+        if (deckStack != null && TarotCards.CONFIG.tarot_deck_applies_effects && deckStack.has(DataComponents.CONTAINER)) {
+            ItemContainerContents contents = deckStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+            for (ItemStack stack : contents.nonEmptyItems()) {
+                if (stack.getItem() instanceof TarotItem && isActivated(stack)) {
+                   activeCards.add(stack.getItem());
                 }
             }
         }

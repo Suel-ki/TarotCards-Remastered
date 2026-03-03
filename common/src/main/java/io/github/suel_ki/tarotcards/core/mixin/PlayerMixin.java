@@ -31,8 +31,8 @@ public abstract class PlayerMixin extends LivingEntity implements TarotPlayerAcc
             method = "defineSynchedData",
             at = @At("TAIL")
     )
-    private void defineDeckSize(CallbackInfo ci) {
-        this.entityData.define(tarotcards$DATA_DECK_SIZE, TarotCards.CONFIG.tarot_deck_size);
+    private void defineDeckSize(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(tarotcards$DATA_DECK_SIZE, TarotCards.CONFIG.tarot_deck_size);
     }
 
     @Inject(

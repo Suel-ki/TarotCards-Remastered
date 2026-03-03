@@ -22,7 +22,6 @@ public class TarotDeckScreen extends AbstractContainerScreen<TarotDeckMenu> {
 
 	@Override
 	public void render(GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         int deckSize = ((TarotPlayerAccess) Minecraft.getInstance().player).tarotcards$getDeckSize();

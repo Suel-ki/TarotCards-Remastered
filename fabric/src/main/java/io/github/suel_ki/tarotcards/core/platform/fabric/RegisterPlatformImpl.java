@@ -1,14 +1,17 @@
 package io.github.suel_ki.tarotcards.core.platform.fabric;
 
+import com.mojang.serialization.Codec;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.menu.MenuFactory;
+import io.github.suel_ki.tarotcards.core.network.fabric.TarotDeckPayload;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -39,12 +42,28 @@ public class RegisterPlatformImpl {
     }
 
     public static <T extends AbstractContainerMenu> Supplier<MenuType<T>> registerMenuType(String name, MenuFactory<T> factory) {
-        MenuType<T> registry = Registry.register(BuiltInRegistries.MENU, TarotCards.id(name), new ExtendedScreenHandlerType<>(factory::create));
+        ExtendedScreenHandlerType<T, TarotDeckPayload> type = new ExtendedScreenHandlerType<>(
+                (syncId, inv, payload) -> factory.create(syncId, inv, payload.stack()),
+                TarotDeckPayload.CODEC
+        );
+        var registry = Registry.register(BuiltInRegistries.MENU, TarotCards.id(name), type);
         return () -> registry;
     }
 
-    public static <T extends SimpleCriterionTrigger<?>> Supplier<T> registerTrigger(Supplier<T> trigger) {
-        T registry = CriteriaTriggers.register(trigger.get());
+    public static <T extends SimpleCriterionTrigger<?>> Supplier<T> registerTrigger(String name, Supplier<T> trigger) {
+        T registry = Registry.register(BuiltInRegistries.TRIGGER_TYPES, TarotCards.id(name), trigger.get());
+        return () -> registry;
+    }
+
+    public static Supplier<DataComponentType<Boolean>> registerDataComponent(String name) {
+        var registry = Registry.register(
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                TarotCards.id("activated"),
+                DataComponentType.<Boolean>builder()
+                        .persistent(Codec.BOOL)
+                        .networkSynchronized(ByteBufCodecs.BOOL)
+                        .build()
+        );
         return () -> registry;
     }
 

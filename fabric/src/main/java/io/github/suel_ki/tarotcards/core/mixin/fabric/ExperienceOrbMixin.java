@@ -19,7 +19,7 @@ public class ExperienceOrbMixin {
             method = "playerTouch",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/ExperienceOrb;repairPlayerItems(Lnet/minecraft/world/entity/player/Player;I)I")
+                    target = "Lnet/minecraft/world/entity/ExperienceOrb;repairPlayerItems(Lnet/minecraft/server/level/ServerPlayer;I)I")
     )
     private void modifyPickupXpValue(Player player, CallbackInfo ci) {
         this.value = TheHierophantTarot.handleOnPlayerPickupXp(player, this.value);
