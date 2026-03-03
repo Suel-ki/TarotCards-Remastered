@@ -1,6 +1,6 @@
-package io.github.suel_ki.tarotcards.core.accessories.forge;
+package io.github.suel_ki.tarotcards.core.accessories.neoforge;
 
-import io.github.suel_ki.tarotcards.core.compat.forge.CuriosCompat;
+import io.github.suel_ki.tarotcards.core.compat.neoforge.CuriosCompat;
 import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

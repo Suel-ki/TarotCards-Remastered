@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "io.github.suel_ki.tarotcards.core.mixin.neoforge",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "mixins": [
+    "ItemStackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

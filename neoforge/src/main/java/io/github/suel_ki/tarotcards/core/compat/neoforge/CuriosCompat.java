@@ -1,4 +1,4 @@
-package io.github.suel_ki.tarotcards.core.compat.forge;
+package io.github.suel_ki.tarotcards.core.compat.neoforge;
 
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.world.entity.player.Player;

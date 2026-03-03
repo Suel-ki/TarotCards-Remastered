@@ -1,20 +1,19 @@
-package io.github.suel_ki.tarotcards.common.loot.forge;
+package io.github.suel_ki.tarotcards.common.loot.neoforge;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.core.config.TarotConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
 
@@ -27,14 +26,13 @@ public class TarotLootAdditionsImpl extends LootModifier {
 
     public List<Item> items;
 
-    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, TarotCards.MOD_ID);
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, TarotCards.MOD_ID);
 
-    public static final Supplier<Codec<TarotLootAdditionsImpl>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst)
-            .and(ForgeRegistries.ITEMS.getCodec()
-                    .listOf()
-                    .fieldOf("items")
-                    .forGetter(v -> v.items))
-            .apply(inst, TarotLootAdditionsImpl::new)));
+    public static final MapCodec<TarotLootAdditionsImpl> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            codecStart(instance)
+                    .and(BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("items").forGetter(v -> v.items))
+                    .apply(instance, TarotLootAdditionsImpl::new)
+    );
 
     public TarotLootAdditionsImpl(LootItemCondition[] conditionsIn, List<Item> items) {
         super(conditionsIn);
@@ -42,7 +40,7 @@ public class TarotLootAdditionsImpl extends LootModifier {
     }
 
     public static void init() {
-        LOOT_MODIFIERS.register("loot_additions", CODEC);
+        LOOT_MODIFIERS.register("loot_additions", () -> CODEC);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class TarotLootAdditionsImpl extends LootModifier {
     }
 
     @Override
-    public Codec<? extends LootModifier> codec() {
-        return CODEC.get();
+    public MapCodec<? extends LootModifier> codec() {
+        return CODEC;
     }
 }

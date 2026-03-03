@@ -1,4 +1,4 @@
-package io.github.suel_ki.tarotcards.forge.event;
+package io.github.suel_ki.tarotcards.neoforge.event;
 
 
 import io.github.suel_ki.tarotcards.TarotCards;
@@ -11,18 +11,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerXpEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = TarotCards.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = TarotCards.MOD_ID)
 public class EventHandler {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
@@ -30,22 +29,24 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.player.tickCount % TarotCards.CONFIG.tick_rate == 0 && event.side == LogicalSide.SERVER) {
-            event.player.level().getProfiler().push("TarotCards");
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide()) return;
+        Player player = event.getEntity();
+        if (player.tickCount % TarotCards.CONFIG.tick_rate == 0) {
+            player.level().getProfiler().push("TarotCards");
 
-            Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(event.player);
+            Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(player);
             for (TarotItem tarot : TarotItem.ITEMS_CARDS) {
                 boolean hasThisCard = activeCardsSnapshot.contains(tarot);
-                tarot.handleTick(event.player, hasThisCard);
+                tarot.handleTick(player, hasThisCard);
             }
 
-            event.player.level().getProfiler().pop();
+            player.level().getProfiler().pop();
         }
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
         DamageSource source = event.getSource();
         float amount = event.getAmount();
@@ -65,11 +66,11 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingDamageEvent.Pre event) {
         if (event.getSource().getEntity() instanceof Player) {
           //  float amount = TarotUtilPlatform.handleOnDamage(event.getEntity(), event.getSource(), event.getAmount());
-            float amount = JudgementTarot.handleOnDamage(event.getEntity(), event.getSource(), event.getAmount());
-            event.setAmount(amount);
+            float amount = JudgementTarot.handleOnDamage(event.getEntity(), event.getSource(), event.getOriginalDamage());
+            event.setNewDamage(amount);
         }
     }
 
