@@ -64,6 +64,10 @@
   "tarotcards.config.per_player_deck_size.desc": "允许玩家拥有独立的牌组容量，此时 tarot_deck_size 将作为默认值",
   "tarotcards.config.require_card_in_curio.desc": "需要卡牌位于饰品栏，或位于塔罗牌组（同样在饰品栏内）中才能发挥作用",
   "tarotcards.config.tarot_deck_applies_effects.desc": "塔罗牌组内的卡牌是否对持有它的玩家应用效果",
+  "tarotcards.config.level_lock.desc": "如果开启，玩家必须达到指定的经验等级才能激活该塔罗牌的效果",
+  "tarotcards.config.advancement_lock.desc": "如果开启，玩家必须完成指定的进度才能激活塔罗牌的效果",
+  "tarotcards.config.min_xp_level_required.desc": "设置每张塔罗牌所需的最小经验等级",
+  "tarotcards.config.required_advancements.desc": "设置每张塔罗牌对应的成就路径。若不填或成就无效则默认无门槛",
 
   "tarotcards.config.loot": "战利品",
   "tarotcards.config.loot.target_loots.desc": "塔罗牌将从这个列表的战利品表中生成（仅Fabric）",

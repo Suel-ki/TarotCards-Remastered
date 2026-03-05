@@ -67,9 +67,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Pre event) {
-        if (event.getSource().getEntity() instanceof Player) {
+        LivingEntity victim = event.getEntity();
+        DamageSource source = event.getSource();
+        if (source.getEntity() instanceof Player) {
+            float amount = event.getNewDamage();
           //  float amount = TarotUtilPlatform.handleOnDamage(event.getEntity(), event.getSource(), event.getAmount());
-            float amount = JudgementTarot.handleOnDamage(event.getEntity(), event.getSource(), event.getOriginalDamage());
+            amount = JudgementTarot.handleOnDamage(victim, source, amount);
             event.setNewDamage(amount);
         }
     }

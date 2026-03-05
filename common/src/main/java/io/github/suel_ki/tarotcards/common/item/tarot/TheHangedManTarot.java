@@ -31,7 +31,6 @@ public class TheHangedManTarot extends TarotItem {
         return amount;
     }
 
-
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", String.valueOf(TarotCards.CONFIG.cards.the_hanged_man_xpratio * 100)).withStyle(ChatFormatting.BLUE));

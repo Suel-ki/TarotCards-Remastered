@@ -4,10 +4,14 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -34,10 +38,18 @@ public abstract class TarotItem extends Item {
 
     public static final TagKey<Item> TAROT = TagKey.create(Registries.ITEM, TarotCards.id("tarot_cards"));
     public static final List<TarotItem> ITEMS_CARDS = new ArrayList<>();
+    private ResourceLocation cachedId;
 
     public TarotItem() {
         super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).component(TarotCards.ACTIVATED.get(), true));
         ITEMS_CARDS.add(this);
+    }
+
+    public ResourceLocation getCacheId() {
+        if (this.cachedId == null) {
+            this.cachedId = BuiltInRegistries.ITEM.getKey(this);
+        }
+        return this.cachedId;
     }
 
     @Override
@@ -52,15 +64,17 @@ public abstract class TarotItem extends Item {
         return tarot.getOrDefault(TarotCards.ACTIVATED.get(), true);
     }
 
+    public static void setActivated(ItemStack tarot, boolean activated) {
+        tarot.set(TarotCards.ACTIVATED.get(), activated);
+    }
+
     /**
      * Toggles Tarot Card on use.
      */
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack tarot = player.getItemInHand(hand);
-        if (!level.isClientSide) {
-            tarot.set(TarotCards.ACTIVATED.get(), !isActivated(tarot));
-        }
+        setActivated(tarot, !isActivated(tarot));
         return super.use(level, player, hand);
     }
 
@@ -128,7 +142,34 @@ public abstract class TarotItem extends Item {
      * Subclasses override this to add unique requirements (like being alone).
      * @return true by default.
      */
-    protected boolean checkExtraConditions(Player player) {
+    public boolean checkExtraConditions(Player player) {
+
+        if (TarotCards.CONFIG.level_lock) {
+            int requiredLevel = TarotCards.CONFIG.min_xp_level_required.getOrDefault(getCacheId(), 0);
+            if (player.experienceLevel < requiredLevel) {
+                return false;
+            }
+        }
+
+        if (TarotCards.CONFIG.advancement_lock) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                String advPath = TarotCards.CONFIG.required_advancements.get(getCacheId());
+
+                if (advPath != null && !advPath.isEmpty()) {
+                    ResourceLocation advId = ResourceLocation.parse(advPath);
+                    AdvancementHolder advancement = serverPlayer.getServer().getAdvancements().get(advId);
+
+                    if (advancement != null) {
+                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                            return false;
+                        }
+                    } else {
+                        TarotCards.LOGGER.warn("Advancement not found: '{}' for tarot card: '{}'. Please check your config", advPath, getCacheId());
+                    }
+                }
+            }
+        }
+
         return true;
     }
 

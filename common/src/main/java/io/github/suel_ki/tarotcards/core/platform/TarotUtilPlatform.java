@@ -94,7 +94,7 @@ public class TarotUtilPlatform {
         }
 
         for (Item item : activeCards) {
-            if (item instanceof TarotItem tarot) {
+            if (item instanceof TarotItem tarot && tarot.checkExtraConditions(player)) {
                amount = tarot.onHurt(attacker, player, source, amount);
             }
         }
@@ -111,7 +111,7 @@ public class TarotUtilPlatform {
         }
 
         for (Item item : activeCards) {
-            if (item instanceof TarotItem tarot) {
+            if (item instanceof TarotItem tarot && tarot.checkExtraConditions(player)) {
                 amount = tarot.onAttack(player, victim, source, amount);
             }
         }

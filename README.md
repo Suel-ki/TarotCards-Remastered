@@ -28,6 +28,7 @@
 - ***Enchantment Capping: added `the_highpriestess_extra_levels`. When capenchants is enabled, you can define how many levels above the vanilla maximum an enchantment book can reach***
 - ***NBT Storage: tarot card data is now handled via nbt storage for better stability and easier integration with other mods***
 - ***Commands: Added a set of player-specific deck management commands. These commands require `per_player_deck_size` to be set to true in the config to allow individual capacity limits (0-22) for each player***
+- ***Level & Advancement Lock: Customize the minimum experience level or specific advancement required to activate each card's effect***
 
 ## Cards and their abilities
 The abilities are all passive, and are applied while held or in the players inventory. Cards of the same type do not stack. Can be toggled on or off by using them.
@@ -79,6 +80,10 @@ There's currently an issue with the Tarot Deck being empty when switching to cre
 - ***per_player_deck_size: Allows individual player deck sizes to override the global setting. In this mode, tarot_deck_size is used as the default value***
 - require_card_in_curio: Requires the card to be in your curio slot, or in the tarot deck (also in the curio slot) to function
 - tarot_deck_applies_effects: If cards in the tarot deck apply their effects to the player holding it
+- ***level_lock: If enabled, players must reach a specific experience level to activate the effects of a tarot card***
+- ***advancement_lock: If enabled, players must complete specific advancements to unlock the power of tarot cards***
+- ***min_xp_level_required: Define the minimum experience level required for each tarot card***
+- ***required_advancements: Maps each tarot card to a specific advancement path. If empty or invalid, no advancement will be required***
 #### Loot
 - do_loot_generation: If Tarot Cards should be added to the default loot tables specified in data
 - default_loot_chance: Chance a tarot card appears in default loot (0.75 = 75%)(1.0 = there will always be a single tarot card in chests)
