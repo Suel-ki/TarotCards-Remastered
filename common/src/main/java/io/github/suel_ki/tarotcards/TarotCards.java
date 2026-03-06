@@ -8,7 +8,7 @@ import io.github.suel_ki.tarotcards.core.init.TriggerInit;
 import io.github.suel_ki.tarotcards.core.platform.RegisterPlatform;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +37,7 @@ public class TarotCards {
         TarotLootAdditions.init();
     }
 
-    public static ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+    public static Identifier id(String name) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, name);
     }
 }

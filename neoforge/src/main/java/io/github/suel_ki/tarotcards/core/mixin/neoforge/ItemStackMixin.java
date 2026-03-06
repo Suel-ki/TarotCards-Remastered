@@ -23,7 +23,7 @@ public abstract class ItemStackMixin {
             cancellable = true
 	)
 	public void hurtAndBreak(int amount, LivingEntity entity, EquipmentSlot slot, CallbackInfo ci) {
-		if (entity instanceof Player player && !entity.level().isClientSide) {
+		if (entity instanceof Player player && !entity.level().isClientSide()) {
 			if (TheMagicianTarot.handleItemDamage(this.copy(), player)) {
 				ci.cancel();
 			}

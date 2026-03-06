@@ -5,21 +5,26 @@ import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class WheelOfFortuneTarot extends TarotItem {
 
-    private static final ResourceLocation WHEEL_OF_FORTUNE = TarotCards.id("the_wheel_of_fortune");
+    private static final Identifier WHEEL_OF_FORTUNE = TarotCards.id("the_wheel_of_fortune");
 
     private static final Supplier<AttributeModifier> attribute = () -> new AttributeModifier(WHEEL_OF_FORTUNE, TarotCards.CONFIG.cards.wheel_of_fortune_luckbonus, AttributeModifier.Operation.ADD_VALUE);
+
+    public WheelOfFortuneTarot(Properties properties) {
+        super(properties);
+    }
 
     @Override
     protected Holder<Attribute> getTargetAttribute() {
@@ -32,7 +37,7 @@ public class WheelOfFortuneTarot extends TarotItem {
     }
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.wheel_of_fortune_luckbonus).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.wheel_of_fortune_luckbonus).withStyle(ChatFormatting.BLUE));
 	}
 }

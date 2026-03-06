@@ -6,12 +6,15 @@ import io.github.suel_ki.tarotcards.common.menu.MenuFactory;
 import io.github.suel_ki.tarotcards.core.network.fabric.TarotDeckPayload;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -20,13 +23,15 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RegisterPlatformImpl {
     public static final List<Item> ITEMS = new ArrayList<>();
 
-    public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
-        T registry = Registry.register(BuiltInRegistries.ITEM, TarotCards.id(name), item.get());
+    public static <T extends Item> Supplier<T> registerItem(String name, Function<Item.Properties, T> factory) {
+        Identifier id = TarotCards.id(name);
+        T registry = Registry.register(BuiltInRegistries.ITEM, id, factory.apply(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id))));
         ITEMS.add(registry);
         return () -> registry;
     }

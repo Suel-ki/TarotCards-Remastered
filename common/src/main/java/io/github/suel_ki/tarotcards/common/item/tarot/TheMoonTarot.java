@@ -12,6 +12,10 @@ public class TheMoonTarot extends TarotItem {
 
     private static final Supplier<MobEffectInstance> night_vision = () -> new MobEffectInstance(MobEffects.NIGHT_VISION, 311 + TarotCards.CONFIG.tick_rate, 0, true, false);
 
+    public TheMoonTarot(Properties properties) {
+        super(properties);
+    }
+
     @Override
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {

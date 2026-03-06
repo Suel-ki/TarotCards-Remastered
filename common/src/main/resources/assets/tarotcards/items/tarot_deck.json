@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "tarotcards:item/tarot_deck"
+  }
+}

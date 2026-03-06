@@ -14,16 +14,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class JusticeTarot extends TarotItem {
 
     private static final ResourceKey<DamageType> JUSTICE = ResourceKey.create(Registries.DAMAGE_TYPE, TarotCards.id("justice"));
 
+    public JusticeTarot(Properties properties) {
+        super(properties);
+    }
+
     private static DamageSource justice(Entity entity) {
-        return new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JUSTICE));
+        return new DamageSource(entity.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(JUSTICE));
     }
 
     //Make sure it is a living entity hurting a player
@@ -45,7 +50,7 @@ public class JusticeTarot extends TarotItem {
     }
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", String.valueOf(TarotCards.CONFIG.cards.justice_damagemultiplier * 100)).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", String.valueOf(TarotCards.CONFIG.cards.justice_damagemultiplier * 100)).withStyle(ChatFormatting.BLUE));
 	}
 }

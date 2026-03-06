@@ -25,7 +25,7 @@ public abstract class ItemStackMixin {
             cancellable = true
 	)
 	public void hurtAndBreak(int damage, ServerLevel level, ServerPlayer player, Consumer<Item> onBreak, CallbackInfo ci) {
-		if (player != null && !player.level().isClientSide) {
+		if (player != null && !player.level().isClientSide()) {
 			if (TheMagicianTarot.handleItemDamage(this.copy(), player)) {
 				ci.cancel();
 			}

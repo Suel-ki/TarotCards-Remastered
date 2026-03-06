@@ -2,8 +2,7 @@ package io.github.suel_ki.tarotcards.client.neoforge;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.client.screen.TarotDeckScreen;
-import io.github.suel_ki.tarotcards.common.item.TarotItem;
-import net.minecraft.world.level.ItemLike;
+import io.github.suel_ki.tarotcards.client.tint.DeactivatedColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,9 +17,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onItemColorHandler(RegisterColorHandlersEvent.Item event) {
-        event.register((stack, tintIndex) ->
-                        ((TarotItem) stack.getItem()).getColor(stack, tintIndex),
-                TarotItem.ITEMS_CARDS.toArray(ItemLike[]::new));
+    public static void onItemColorHandler(RegisterColorHandlersEvent.ItemTintSources event) {
+        event.register(TarotCards.id("deactivated"), DeactivatedColor.MAP_CODEC);
     }
 }

@@ -10,11 +10,11 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -27,25 +27,27 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class TarotItem extends Item {
 
     public static final TagKey<Item> TAROT = TagKey.create(Registries.ITEM, TarotCards.id("tarot_cards"));
     public static final List<TarotItem> ITEMS_CARDS = new ArrayList<>();
-    private ResourceLocation cachedId;
+    private Identifier cachedId;
 
-    public TarotItem() {
-        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).component(TarotCards.ACTIVATED.get(), true));
+    public TarotItem(Properties properties) {
+        super(properties.rarity(Rarity.UNCOMMON).stacksTo(1).component(TarotCards.ACTIVATED.get(), true));
         ITEMS_CARDS.add(this);
     }
 
-    public ResourceLocation getCacheId() {
+    public Identifier getCacheId() {
         if (this.cachedId == null) {
             this.cachedId = BuiltInRegistries.ITEM.getKey(this);
         }
@@ -72,7 +74,7 @@ public abstract class TarotItem extends Item {
      * Toggles Tarot Card on use.
      */
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack tarot = player.getItemInHand(hand);
         setActivated(tarot, !isActivated(tarot));
         return super.use(level, player, hand);
@@ -156,8 +158,8 @@ public abstract class TarotItem extends Item {
                 String advPath = TarotCards.CONFIG.required_advancements.get(getCacheId());
 
                 if (advPath != null && !advPath.isEmpty()) {
-                    ResourceLocation advId = ResourceLocation.parse(advPath);
-                    AdvancementHolder advancement = serverPlayer.getServer().getAdvancements().get(advId);
+                    Identifier advId = Identifier.parse(advPath);
+                    AdvancementHolder advancement = serverPlayer.level().getServer().getAdvancements().get(advId);
 
                     if (advancement != null) {
                         if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
@@ -222,17 +224,9 @@ public abstract class TarotItem extends Item {
 //        return amount;
 //    }
 
-    public int getColor(ItemStack stack, int tintIndex) {
-        if (tintIndex == 0 && !isActivated(stack)) {
-            float b = 0.3f;
-            return new Color(b, b, b).getRGB();
-        }
-        return -1;
-    }
-
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(this.getDescriptionId() + ".desc").withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc").withStyle(ChatFormatting.BLUE));
     }
 
 }

@@ -19,6 +19,10 @@ public class TheHighPriestessTarot extends TarotItem {
 
     private static final TagKey<Item> upgradable_enchantment = TagKey.create(Registries.ITEM, TarotCards.id("upgradable_enchantment"));
 
+    public TheHighPriestessTarot(Properties properties) {
+        super(properties);
+    }
+
     @Override
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {

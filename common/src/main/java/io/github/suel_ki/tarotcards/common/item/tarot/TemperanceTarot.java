@@ -8,12 +8,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class TemperanceTarot extends TarotItem {
 
-    public static float handleExhaustionAmount(float amount, Player player) {
+	public TemperanceTarot(Properties properties) {
+		super(properties);
+	}
+
+	public static float handleExhaustionAmount(float amount, Player player) {
 		if (hasTarot(player, ItemInit.temperance.get()) && amount != 0) {
             TarotCards.LOGGER.debug("{} - Reducing hunger", ItemInit.temperance.get());
             TarotCards.LOGGER.debug("From: {}, To: {}, For: {}", amount, (float) (amount * (1f - TarotCards.CONFIG.cards.temperance_reduction)), player);
@@ -23,8 +28,8 @@ public class TemperanceTarot extends TarotItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", String.valueOf(TarotCards.CONFIG.cards.temperance_reduction * 100)).withStyle(ChatFormatting.BLUE));
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+		tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", String.valueOf(TarotCards.CONFIG.cards.temperance_reduction * 100)).withStyle(ChatFormatting.BLUE));
 	}
 
 }

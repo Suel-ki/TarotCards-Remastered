@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "tarotcards:item/the_sun",
+    "tints": [
+      {
+        "type": "tarotcards:deactivated",
+        "color": -11777204
+      }
+    ]
+  }
+}

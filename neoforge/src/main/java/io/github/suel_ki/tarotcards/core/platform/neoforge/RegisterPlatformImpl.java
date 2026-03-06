@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.menu.MenuFactory;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -18,17 +18,18 @@ import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RegisterPlatformImpl {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TarotCards.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TarotCards.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TarotCards.MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, TarotCards.MOD_ID);
     public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPE = DeferredRegister.create(Registries.TRIGGER_TYPE, TarotCards.MOD_ID);
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TarotCards.MOD_ID);
 
-    public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
-        return ITEMS.register(name, item);
+    public static <T extends Item> Supplier<T> registerItem(String name, Function<Item.Properties, T> factory) {
+        return ITEMS.registerItem(name, factory);
     }
 
     public static Supplier<CreativeModeTab> registerItemGroup(String name, Supplier<ItemStack> icon) {

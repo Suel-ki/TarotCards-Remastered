@@ -10,10 +10,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ExperienceOrb.class)
-public class ExperienceOrbMixin {
+public abstract class ExperienceOrbMixin {
 
     @Shadow
-    private int value;
+    protected abstract void setValue(int value);
+
+    @Shadow
+    public abstract int getValue();
 
     @Inject(
             method = "playerTouch",
@@ -22,6 +25,6 @@ public class ExperienceOrbMixin {
                     target = "Lnet/minecraft/world/entity/ExperienceOrb;repairPlayerItems(Lnet/minecraft/server/level/ServerPlayer;I)I")
     )
     private void modifyPickupXpValue(Player player, CallbackInfo ci) {
-        this.value = TheHierophantTarot.handleOnPlayerPickupXp(player, this.value);
+        setValue(TheHierophantTarot.handleOnPlayerPickupXp(player, this.getValue()));
     }
 }

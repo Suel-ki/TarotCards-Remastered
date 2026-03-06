@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class TarotCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("tarotcards")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("decksize")
                         .then(Commands.argument("targets", EntityArgument.players())
                                 .then(Commands.literal("get")

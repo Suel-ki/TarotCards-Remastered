@@ -8,6 +8,8 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.common.item.tarot.*;
 import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,7 +37,8 @@ public class PlayerMixin {
         }
 
         if (player.tickCount % TarotCards.CONFIG.tick_rate == 0) {
-            player.level().getProfiler().push("TarotCards");
+            ProfilerFiller profiler = Profiler.get();
+            profiler.push("TarotCards");
             Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(player);
 
             for (TarotItem tarot : TarotItem.ITEMS_CARDS) {
@@ -43,7 +46,7 @@ public class PlayerMixin {
                 tarot.handleTick(player, hasThisCard);
             }
 
-            player.level().getProfiler().pop();
+            profiler.pop();
         }
     }
 
@@ -53,7 +56,7 @@ public class PlayerMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/player/Player;getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
     )
-    private float onLivingHurt(float amount, DamageSource source) {
+    private float onLivingHurt(float amount, @Local(argsOnly = true) DamageSource source) {
         Player victim = (Player) (Object) this;
 
         Entity attacker = source.getEntity();

@@ -9,6 +9,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class TheMagicianTarot extends TarotItem {
 
+    public TheMagicianTarot(Properties properties) {
+        super(properties);
+    }
+
     public static boolean handleItemDamage(ItemStack item, Player player) {
         if (hasTarot(player, ItemInit.the_magician.get())) {
             if (item.isDamageableItem() && item.getTags().anyMatch(t -> (t.equals(ItemTags.PIGLIN_LOVED)))) {

@@ -6,6 +6,8 @@ import io.github.suel_ki.tarotcards.common.command.TarotCommand;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.common.item.tarot.*;
 import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,7 +35,8 @@ public class EventHandler {
         if (event.getEntity().level().isClientSide()) return;
         Player player = event.getEntity();
         if (player.tickCount % TarotCards.CONFIG.tick_rate == 0) {
-            player.level().getProfiler().push("TarotCards");
+            ProfilerFiller profiler = Profiler.get();
+            profiler.push("TarotCards");
 
             Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(player);
             for (TarotItem tarot : TarotItem.ITEMS_CARDS) {
@@ -41,7 +44,7 @@ public class EventHandler {
                 tarot.handleTick(player, hasThisCard);
             }
 
-            player.level().getProfiler().pop();
+            profiler.pop();
         }
     }
 
@@ -79,7 +82,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onPlayerPickupXpEvent(PlayerXpEvent.PickupXp event) {
-        event.getOrb().value = TheHierophantTarot.handleOnPlayerPickupXp(event.getEntity(), event.getOrb().value);
+        event.getOrb().setValue(TheHierophantTarot.handleOnPlayerPickupXp(event.getEntity(), event.getOrb().getValue()));
     }
 
 

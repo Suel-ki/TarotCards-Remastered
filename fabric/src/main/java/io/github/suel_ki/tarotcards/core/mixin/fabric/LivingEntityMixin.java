@@ -21,7 +21,7 @@ public class LivingEntityMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/LivingEntity;getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
     )
-    private float modifyHurtAmount(float original, DamageSource source) {
+    private float modifyHurtAmount(float original, @Local(argsOnly = true) DamageSource source) {
         LivingEntity victim = (LivingEntity) (Object) this;
 
         if (victim instanceof Player) return original;

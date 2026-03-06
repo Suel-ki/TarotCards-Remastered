@@ -13,7 +13,7 @@ import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedDouble;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedNumber;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.LinkedHashMap;
 
@@ -36,13 +36,13 @@ public class TarotConfig extends Config {
 
     public ValidatedIdentifierMap<Integer> min_xp_level_required = new ValidatedIdentifierMap<>(
             new LinkedHashMap<>(),
-            ValidatedIdentifier.ofTag(ResourceLocation.parse("tarotcards:the_fool"), TarotItem.TAROT),
+            ValidatedIdentifier.ofTag(Identifier.parse("tarotcards:the_fool"), TarotItem.TAROT),
             new ValidatedInt(0, Integer.MAX_VALUE, 0).instanceEntry()
     );
 
     public ValidatedIdentifierMap<String> required_advancements = new ValidatedIdentifierMap<>(
             new LinkedHashMap<>(),
-            ValidatedIdentifier.ofTag(ResourceLocation.parse("tarotcards:the_fool"), TarotItem.TAROT),
+            ValidatedIdentifier.ofTag(Identifier.parse("tarotcards:the_fool"), TarotItem.TAROT),
             new ValidatedString("minecraft:story/mine_diamond")
     );
 

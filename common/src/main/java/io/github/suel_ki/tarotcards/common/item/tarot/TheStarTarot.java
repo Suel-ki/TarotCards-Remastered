@@ -5,18 +5,23 @@ import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class TheStarTarot extends TarotItem {
 
-    private static final ResourceLocation STAR = TarotCards.id("the_star");
+    private static final Identifier STAR = TarotCards.id("the_star");
+
+    public TheStarTarot(Properties properties) {
+        super(properties);
+    }
 
     @Override
     protected Holder<Attribute> getTargetAttribute() {
@@ -29,8 +34,8 @@ public class TheStarTarot extends TarotItem {
     }
 
     @Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.the_star_reachboost * 100).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.the_star_reachboost * 100).withStyle(ChatFormatting.BLUE));
 	}
 
 }

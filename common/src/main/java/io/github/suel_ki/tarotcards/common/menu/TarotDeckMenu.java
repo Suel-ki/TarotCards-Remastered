@@ -41,7 +41,7 @@ public class TarotDeckMenu extends AbstractContainerMenu {
 
         int deckSize = ((TarotPlayerAccess) inv.player).tarotcards$getDeckSize();
 
-        if (!inv.player.level().isClientSide) {
+        if (!inv.player.level().isClientSide()) {
             for (int i = deckSize; i < 22; i++) {
                 ItemStack stackInSlot = deckInventory.getItem(i);
                 if (!stackInSlot.isEmpty()) {

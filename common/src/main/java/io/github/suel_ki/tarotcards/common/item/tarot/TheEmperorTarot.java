@@ -9,13 +9,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class TheEmperorTarot extends TarotItem {
 
     private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.the_emperpor_heroofvillagebonus, true, false);
+
+    public TheEmperorTarot(Properties properties) {
+        super(properties);
+    }
 
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {
@@ -24,8 +29,8 @@ public class TheEmperorTarot extends TarotItem {
     }
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.the_emperpor_heroofvillagebonus + 1).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.the_emperpor_heroofvillagebonus + 1).withStyle(ChatFormatting.BLUE));
 	}
 }
 

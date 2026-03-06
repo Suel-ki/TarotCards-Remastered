@@ -24,7 +24,7 @@ public class TarotLootAdditionsImpl {
         );
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 
-            if (!CONFIG.loot.do_loot_generation || !TarotCardsFabric.LOOT.target_loots.contains(key.location())) {
+            if (!CONFIG.loot.do_loot_generation || !TarotCardsFabric.LOOT.target_loots.contains(key.identifier())) {
                 return;
             }
 

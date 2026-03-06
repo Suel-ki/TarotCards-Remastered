@@ -9,13 +9,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class StrengthTarot extends TarotItem {
 
-    private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.DAMAGE_BOOST, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.strength_amplifier, true, false);
+    private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.STRENGTH, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.strength_amplifier, true, false);
+
+    public StrengthTarot(Properties properties) {
+        super(properties);
+    }
 
     @Override
     protected void handleExtraLogic(Player player, boolean hasCard) {
@@ -25,7 +30,7 @@ public class StrengthTarot extends TarotItem {
     }
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.strength_amplifier + 1).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable(this.getDescriptionId() + ".desc", TarotCards.CONFIG.cards.strength_amplifier + 1).withStyle(ChatFormatting.BLUE));
 	}
 }

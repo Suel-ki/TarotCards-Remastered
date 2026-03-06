@@ -11,6 +11,10 @@ import net.minecraft.world.entity.player.Player;
 
 public class TheDevilTarot extends TarotItem {
 
+    public TheDevilTarot(Properties properties) {
+        super(properties);
+    }
+
     public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
         if (attacker!= null) {
 
