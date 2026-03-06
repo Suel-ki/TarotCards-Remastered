@@ -31,16 +31,17 @@ repositories {
         name = "Curios"
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        url = "https://repo.nyon.dev/releases"
+    }
 }
 
 dependencies {
     neoForge "net.neoforged:neoforge:${neo_version}"
 
     modImplementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
-    // https://github.com/fzzyhmstrs/fconfig/issues/102 & https://github.com/thedarkcolour/KotlinForForge/issues/138
-//    modImplementation "me.fzzyhmstrs:fzzy_config:${fzzyconfig_version}+neoforge"
-//    modRuntimeOnly "maven.modrinth:kotlin-for-forge:${kotlinforge_version}"
-    modCompileOnly "curse.maven:ftb-teams-forge-404468:${ftbteam_id}"
+    modCompileOnly "io.wispforest:accessories-neoforge:${accessories_version}"
+    modImplementation "me.fzzyhmstrs:fzzy_config:${fzzyconfig_version}+neoforge"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
