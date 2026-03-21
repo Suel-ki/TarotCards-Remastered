@@ -59,6 +59,8 @@
   "commands.tarotcards.decksize.warning": "Per-player deck size is disabled. This change will only take effect once enabled in config",
   "commands.tarotcards.decksize.invalid": "Invalid deck size. Please enter a value between 0 and 22",
 
+  "key.tarotcards.open_deck": "Open Tarot Deck",
+
   "tarotcards.config.tick_rate.desc": "How many ticks it takes to check if a player has a tarot or not, more = more performace but longer time to activate/deactivate effects",
   "tarotcards.config.per_player_deck_size.desc": "Allows individual player deck sizes to override the global setting. In this mode, tarot_deck_size is used as the default value.",
   "tarotcards.config.tarot_deck_size.desc": "The maximum capacity of the tarot deck, determines the number of active slots in the deck gui (0-22).",
@@ -89,6 +91,8 @@
   "tarotcards.config.cards.the_hermit_allyrange.desc": "How far away the player must be from allies to activate",
   "tarotcards.config.cards.the_hermit_armorbonus.desc": "How much armor is added when away from allies",
   "tarotcards.config.cards.the_hierophant_xpboost.desc": "Percentage increase of experience (2 = +200%)",
+  "tarotcards.config.cards.the_highpriestess_taxfree.desc": "Converts level cost to fixed XP points. Ex: if an upgrade costs 5 levels, it only deducts the XP needed for Lv.0-5, instead of dropping a Lv.100 player down to 95",
+  "tarotcards.config.cards.the_highpriestess_skip_maxed.desc": "If enabled, the card will automatically search for the first enchantment that hasn't reached its level cap. If disabled, it only attempts to upgrade the very first enchantment in the list",
   "tarotcards.config.cards.the_highpriestess_capenchants.desc": "Stops upgrading enchantment books when they are at max level",
   "tarotcards.config.cards.the_highpriestess_upgradecost.desc": "How much each level of enchantment costs to upgrade (cost = enchantment_level * this_config)",
   "tarotcards.config.cards.the_highpriestess_extra_levels.desc": "Allows enchantment books to be upgraded beyond their natural max level by this many additional levels (only works if capenchants is true)",
