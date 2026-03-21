@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
 
 public record TarotDeckPayload(ItemStack stack) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<TarotDeckPayload> ID = new CustomPacketPayload.Type<>(TarotCards.id("open_deck"));
+    public static final CustomPacketPayload.Type<TarotDeckPayload> TYPE = new CustomPacketPayload.Type<>(TarotCards.id("open_deck"));
     public static final StreamCodec<RegistryFriendlyByteBuf, TarotDeckPayload> CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC, TarotDeckPayload::stack,
             TarotDeckPayload::new
@@ -15,6 +15,6 @@ public record TarotDeckPayload(ItemStack stack) implements CustomPacketPayload {
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return TYPE;
     }
 }
