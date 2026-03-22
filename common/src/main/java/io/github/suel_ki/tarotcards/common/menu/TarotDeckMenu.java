@@ -3,6 +3,7 @@ package io.github.suel_ki.tarotcards.common.menu;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.access.TarotPlayerAccess;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
 import io.github.suel_ki.tarotcards.core.init.TriggerInit;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -172,7 +173,7 @@ public class TarotDeckMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return !player.isRemoved() && (player.getMainHandItem().is(deck.getItem()) || player.getOffhandItem().is(deck.getItem()));
+        return !player.isRemoved() && (player.getMainHandItem().is(deck.getItem()) || player.getOffhandItem().is(deck.getItem()) || !AccessoriesHandler.getDeck(player).isEmpty());
     }
 
 }

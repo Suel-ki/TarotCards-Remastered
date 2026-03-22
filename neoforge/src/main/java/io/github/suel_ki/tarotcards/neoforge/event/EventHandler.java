@@ -5,7 +5,10 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.command.TarotCommand;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.common.item.tarot.*;
+import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
+import io.github.suel_ki.tarotcards.core.network.OpenDeckPayload;
 import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +23,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.Set;
 
@@ -85,7 +90,20 @@ public class EventHandler {
         event.getOrb().setValue(TheHierophantTarot.handleOnPlayerPickupXp(event.getEntity(), event.getOrb().getValue()));
     }
 
+    @SubscribeEvent
+    public static void register(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(TarotCards.MOD_ID).versioned("1");
 
-
+        registrar.playToServer(OpenDeckPayload.TYPE, OpenDeckPayload.CODEC, (payload, context) -> {
+            context.enqueueWork(() -> {
+                if (context.player() instanceof ServerPlayer player) {
+                    var deck = AccessoriesHandler.getDeck(player);
+                    if (!deck.isEmpty()) {
+                        TarotUtilPlatform.openTarotMenu(player, deck);
+                    }
+                }
+            });
+        });
+    }
 
 }
