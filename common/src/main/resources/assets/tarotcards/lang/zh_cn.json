@@ -57,6 +57,8 @@
   "commands.tarotcards.decksize.warning": "当前配置已禁用‘独立容量’，此修改仅在开启对应配置(per_player_deck_size)后生效。",
   "commands.tarotcards.decksize.invalid": "无效的容量大小，请输入 0 到 22 之间的数值。",
 
+  "key.tarotcards.open_deck": "打开塔罗牌组",
+
   "tarotcards.config.tick_rate.desc": "检查玩家是否拥有塔罗牌所需的 tick 数，数值越大性能越好，但启用/禁用效果的时间越长",
   "tarotcards.config.tarot_deck_size.desc": "塔罗牌组的最大容量，决定了卡组gui中可激活的槽位数量 (0-22)",
   "tarotcards.config.per_player_deck_size.desc": "允许玩家拥有独立的牌组容量，此时 tarot_deck_size 将作为默认值",
@@ -88,7 +90,9 @@
   "tarotcards.config.cards.the_hermit_allyrange.desc": "激活效果所需远离盟友的距离",
   "tarotcards.config.cards.the_hermit_armorbonus.desc": "远离盟友时增加的护甲值",
   "tarotcards.config.cards.the_hierophant_xpboost.desc": "经验值增加百分比 (2 = +200%)",
-  "tarotcards.config.cards.the_highpriestess_capenchants.desc": "当附魔书达到最高等级时停止升级",
+  "tarotcards.config.cards.the_highpriestess_taxfree.desc": "将等级消耗转为固定经验值。示例：若一次升级消耗5级，则仅扣除0级到5级所需的总经验，而非将100级的玩家直接降级至95级",
+  "tarotcards.config.cards.the_highpriestess_skip_maxed.desc": "卡牌会自动寻找尚未达到等级上限的第一个附魔。若禁用，则仅尝试升级列表中的第一个附魔",
+  "tarotcards.config.cards.the_highpriestess_capenchants.desc": "启用以允许附魔升级突破原版最大等级上限（增加 extra_levels 配置的级数）",
   "tarotcards.config.cards.the_highpriestess_upgradecost.desc": "每级附魔升级所需的消耗 (成本 = 附魔等级 * 此配置值)",
   "tarotcards.config.cards.the_highpriestess_extra_levels.desc": "允许附魔书在自然最高等级的基础上额外升级的级数，仅在 capenchants 为开启状态时生效",
   "tarotcards.config.cards.the_lovers_range.desc": "应用生命恢复效果所需的盟友距离",
