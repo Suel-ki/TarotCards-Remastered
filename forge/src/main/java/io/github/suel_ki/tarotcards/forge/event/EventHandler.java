@@ -31,7 +31,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.player.tickCount % TarotCards.CONFIG.tick_rate == 0 && event.side == LogicalSide.SERVER) {
+        if (event.player.tickCount % TarotCards.CONFIG.tick_rate == 0 && event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END) {
             event.player.level().getProfiler().push("TarotCards");
 
             Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(event.player);
