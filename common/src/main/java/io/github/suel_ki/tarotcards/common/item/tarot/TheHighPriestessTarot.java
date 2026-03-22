@@ -59,7 +59,6 @@ public class TheHighPriestessTarot extends TarotItem {
             Holder<Enchantment> targetEnch = null;
             int currentLvl = 0;
 
-
             for (Holder<Enchantment> holder : orderedList) {
                 int lvl = enchantments.getLevel(holder);
                 int max = capEnchs ? (holder.value().getMaxLevel() + extraLevels) : holder.value().getMaxLevel();
