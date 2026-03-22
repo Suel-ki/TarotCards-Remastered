@@ -71,7 +71,10 @@ By default, cards have a 20% chance to spawn once in:
 
 ## The Tarot Deck
 Holds one of each card for easy collection. Can be equipped as curio Applies their effect even while the cards are inside. Also fire immune!
-There's currently an issue with the Tarot Deck being empty when switching to creative when on a server. Looking for a fix is taking longer than expected, its probably an issue with forge. I recommend not using the deck if you're planning to switch game modes.
+~~There's currently an issue with the Tarot Deck being empty when switching to creative when on a server. Looking for a fix is taking longer than expected, its probably an issue with forge. I recommend not using the deck if you're planning to switch game modes.~~(Fixed)
+
+## Key
+***With Curios API or Trinkets installed, press G (default) to access the tarot deck in the accessory inventory***
 
 ## Config
 ### General
@@ -104,7 +107,9 @@ There's currently an issue with the Tarot Deck being empty when switching to cre
 - the_hierophant_xpboost: Percentage increase of experience (2 = +200%)
 - the_hanged_man_xpratio: How much of the damage is converted to experience
 - the_hanged_man_xpcap: Max amount of experience that can be obtained from an instance of damage
-- the_highpriestess_capenchants: Stops upgrading enchantment books when they are at max level
+- ***the_highpriestess_taxfree: Converts level cost to fixed XP points. Ex: if an upgrade costs 5 levels, it only deducts the XP needed for Lv.0-5, instead of dropping a Lv.100 player down to 95***
+- ***the_highpriestess_skip_maxed: If enabled, the card will automatically search for the first enchantment that hasn't reached its level cap. If disabled, it only attempts to upgrade the very first enchantment in the list***
+- the_highpriestess_capenchants: Enable to allow upgrading enchantments beyond their vanilla maximum level (plus extra_levels)
 - the_highpriestess_upgradecost: How much each level of enchantment costs to upgrade (cost = enchantment_level * this_config)
 - ***the_highpriestess_extra_levels: Allows enchantment books to be upgraded beyond their natural max level by this many additional levels (only works if capenchants is true)***
 - the_empress_range: How close animals need to be to set lovemode
