@@ -108,6 +108,8 @@ public class TarotConfig extends Config {
         @ValidatedInt.Restrict(min = 0, max = 100, type = ValidatedNumber.WidgetType.TEXTBOX)
         public int the_highpriestess_extra_levels = 3;
         public boolean the_highpriestess_capenchants = false;
+        public boolean the_highpriestess_taxfree = false;
+        public boolean the_highpriestess_skip_maxed = false;
 
     }
 
