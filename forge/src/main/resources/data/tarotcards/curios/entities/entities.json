@@ -1,6 +1,7 @@
 {
   "entities": [
-    "minecraft:player"
+    "minecraft:player",
+    "touhou_little_maid:maid"
   ],
   "slots": [
     "tarot"

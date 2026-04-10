@@ -4,6 +4,7 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -35,10 +36,10 @@ public class TheSunTarot extends TarotItem {
     }
 
     @Override
-    protected void onModifierRemoved(Player player, Attribute attr) {
+    protected void onModifierRemoved(LivingEntity entity, Attribute attr) {
         if (attr == Attributes.MAX_HEALTH) {
-            if (player.getHealth() > player.getMaxHealth()) {
-                player.setHealth(player.getMaxHealth());
+            if (entity.getHealth() > entity.getMaxHealth()) {
+                entity.setHealth(entity.getMaxHealth());
             }
         }
     }

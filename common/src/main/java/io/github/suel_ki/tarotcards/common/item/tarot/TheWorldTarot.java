@@ -27,14 +27,14 @@ public class TheWorldTarot extends TarotItem {
     public static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60 + TarotCards.CONFIG.tick_rate, TarotCards.CONFIG.cards.the_world_slownessamplifier, true, false, false);
 
     @Override
-    protected void handleExtraLogic(Player player, boolean hasCard) {
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {
         if (hasCard) {
             double range = TarotCards.CONFIG.cards.the_world_range;
-            AABB area = player.getBoundingBox().inflate(range);
-            List<LivingEntity> entities = player.level().getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, player, area);
+            AABB area = entity.getBoundingBox().inflate(range);
+            List<LivingEntity> entities = entity.level().getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, entity, area);
 
             for (LivingEntity e : entities) {
-                if (shouldAffect(player, e)) {
+                if (shouldAffect(entity, e)) {
                     TarotCards.LOGGER.debug("{} - Slow nearby", ItemInit.the_world.get());
                     TarotCards.LOGGER.debug("Entity: {}", e);
 
@@ -44,22 +44,22 @@ public class TheWorldTarot extends TarotItem {
         }
     }
 
-    private boolean shouldAffect(Player player, LivingEntity e) {
-        if (e.isAlliedTo(player)) return false;
+    private boolean shouldAffect(LivingEntity entity, LivingEntity e) {
+        if (e.isAlliedTo(entity) || entity.isAlliedTo(e)) return false;
 
         if (e instanceof OwnableEntity ownable) {
             UUID ownerUUID = ownable.getOwnerUUID();
             if (ownerUUID != null) {
-                if (ownerUUID.equals(player.getUUID())) return false;
+                if (ownerUUID.equals(entity.getUUID())) return false;
 
                 LivingEntity owner = ownable.getOwner();
-                if (owner != null && player.isAlliedTo(owner)) return false;
+                if (owner != null && entity.isAlliedTo(owner)) return false;
 
-                if (FTBTeamCompat.isSameTeamByUUID(player.getUUID(), ownerUUID)) return false;
+                if (entity instanceof Player player && FTBTeamCompat.isSameTeamByUUID(player.getUUID(), ownerUUID)) return false;
             }
         }
 
-        if (e instanceof Player ePlayer) {
+        if (e instanceof Player ePlayer && entity instanceof Player player) {
             if (!player.canHarmPlayer(ePlayer)) return false;
             return !FTBTeamCompat.isSameTeamSafe(player, ePlayer);
         }

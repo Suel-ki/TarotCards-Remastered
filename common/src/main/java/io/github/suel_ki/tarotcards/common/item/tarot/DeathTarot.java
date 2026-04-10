@@ -18,7 +18,8 @@ import java.util.List;
 
 public class DeathTarot extends TarotItem {
 
-    public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
+    @Override
+    public float onAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         if (victim.getMobType() == MobType.UNDEAD) {
             return amount;
         }

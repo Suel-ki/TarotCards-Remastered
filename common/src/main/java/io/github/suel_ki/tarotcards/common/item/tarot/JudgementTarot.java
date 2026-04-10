@@ -20,7 +20,7 @@ import java.util.List;
 public class JudgementTarot extends TarotItem {
 
     public static float handleOnDamage(LivingEntity entity, DamageSource source, float amount)  {
-        if (source.getEntity() instanceof Player attacker) {
+        if (source.getEntity() instanceof LivingEntity attacker) {
             if (hasTarot(attacker, ItemInit.judgement.get())) {
                 if (attacker.getRandom().nextDouble() < TarotCards.CONFIG.cards.judgement_damagechance) {
 

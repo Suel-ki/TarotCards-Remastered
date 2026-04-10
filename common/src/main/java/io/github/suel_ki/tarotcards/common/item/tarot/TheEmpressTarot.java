@@ -4,16 +4,17 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 
 public class TheEmpressTarot extends TarotItem {
 
-    protected void handleExtraLogic(Player player, boolean hasCard) {
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {
         if (hasCard) {
-            player.level().getNearbyEntities(Animal.class, TargetingConditions.forNonCombat(), player, player.getBoundingBox().inflate(TarotCards.CONFIG.cards.the_empress_range)).forEach(e -> {
-                if (e.canFallInLove() && e.getAge() == 0) {
+            entity.level().getNearbyEntities(Animal.class, TargetingConditions.forNonCombat(), entity, entity.getBoundingBox().inflate(TarotCards.CONFIG.cards.the_empress_range)).forEach(e -> {
+                if (entity instanceof Player player && e.canFallInLove() && e.getAge() == 0) {
 
                     TarotCards.LOGGER.debug("{} - Set in love", ItemInit.the_empress.get());
                     TarotCards.LOGGER.debug("Animal: {}", e);

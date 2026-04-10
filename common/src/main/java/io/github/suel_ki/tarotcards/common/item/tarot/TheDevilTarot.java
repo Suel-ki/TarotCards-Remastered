@@ -11,7 +11,8 @@ import net.minecraft.world.entity.player.Player;
 
 public class TheDevilTarot extends TarotItem {
 
-    public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
+    @Override
+    public float onAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         if (attacker!= null) {
 
             TarotCards.LOGGER.debug("{} - Inflict weakness", ItemInit.the_devil.get());

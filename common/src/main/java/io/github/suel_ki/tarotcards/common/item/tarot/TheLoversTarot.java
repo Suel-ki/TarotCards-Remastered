@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,14 +27,14 @@ public class TheLoversTarot extends TarotItem {
     private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.REGENERATION, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.the_lovers_regenamplifier, true, false, false);
 
     @Override
-    protected void handleExtraLogic(Player player, boolean hasCard) {
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {
         if (hasCard) {
             double range = TarotCards.CONFIG.cards.the_lovers_range;
-            AABB area = player.getBoundingBox().inflate(range);
-            List<LivingEntity> entities = player.level().getNearbyEntities(LivingEntity.class, targeting, player, area);
+            AABB area = entity.getBoundingBox().inflate(range);
+            List<LivingEntity> entities = entity.level().getNearbyEntities(LivingEntity.class, targeting, entity, area);
 
             for (LivingEntity e : entities) {
-                if (shouldAffect(player, e)) {
+                if (shouldAffect(entity, e)) {
                     TarotCards.LOGGER.debug("{} - Add regen", ItemInit.the_lovers.get());
                     TarotCards.LOGGER.debug("Ally: {}", e);
 
@@ -43,9 +44,11 @@ public class TheLoversTarot extends TarotItem {
         }
     }
 
-    private boolean shouldAffect(Player player, LivingEntity e) {
-        if (e.isAlliedTo(player)) return true;
-        return e instanceof Player eplayer && FTBTeamCompat.isSameTeamSafe(player, eplayer);
+    private boolean shouldAffect(LivingEntity entity, LivingEntity e) {
+        if (e.isAlliedTo(entity) || entity.isAlliedTo(e)) {
+            return true;
+        }
+        return e instanceof Player eplayer && entity instanceof Player player && FTBTeamCompat.isSameTeamSafe(player, eplayer);
     }
 
     @Override

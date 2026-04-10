@@ -18,12 +18,13 @@ import java.util.List;
 
 public class TheTowerTarot extends TarotItem {
 
-    public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
+    @Override
+    public float onHurt(@Nullable LivingEntity attacker, LivingEntity entity, DamageSource source, float amount) {
         if (source.is(DamageTypes.FALL)) {
             float negation = (float) (amount * (1 - TarotCards.CONFIG.cards.the_tower_damagenegation));
 
             TarotCards.LOGGER.debug("{} - Fall negation", ItemInit.the_tower.get());
-            TarotCards.LOGGER.debug("Negation: {}, For: {}", negation, player);
+            TarotCards.LOGGER.debug("Negation: {}, For: {}", negation, entity);
 
             return negation;
         }

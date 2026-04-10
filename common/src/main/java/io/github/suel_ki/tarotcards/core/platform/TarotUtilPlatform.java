@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
+import io.github.suel_ki.tarotcards.core.compat.TouhouLittleMaidCompat;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
@@ -42,39 +43,49 @@ public class TarotUtilPlatform {
         throw new AssertionError();
     }
 
+    public static boolean isValidTarget(LivingEntity entity) {
+        return entity instanceof Player || TouhouLittleMaidCompat.isMaid(entity);
+    }
+
     /**
      * Scans player inventory and the tarot deck (nbt) in one go.
      * @return A Set of all active Tarot Items currently possessed by the player.
      */
-    public static Set<Item> getActiveTarots(Player player) {
+    public static Set<Item> getActiveTarots(LivingEntity entity) {
         Set<Item> activeCards = new HashSet<>();
-        if (player == null) return activeCards;
+        if (entity == null) return activeCards;
+
+        if (!isValidTarget(entity)) {
+            return activeCards;
+        }
 
         for (int i = 0; i < TarotItem.ITEMS_CARDS.size(); i++) {
             TarotItem tarot = TarotItem.ITEMS_CARDS.get(i);
-            if (AccessoriesHandler.hasAccessoryActivated(player, tarot)) {
+            if (AccessoriesHandler.hasAccessoryActivated(entity, tarot)) {
                 activeCards.add(tarot);
             }
         }
 
         // If they have the deck in a curio slot, save it for checking later
-        ItemStack deckStack = AccessoriesHandler.getDeck(player);
+        ItemStack deckStack = AccessoriesHandler.getDeck(entity);
 
-        // Only search the inventory if config allows it
-        if (!TarotCards.CONFIG.require_card_in_curio) {
-            Inventory inv = player.getInventory();
-            // Check player for card and deck
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                ItemStack stack = inv.getItem(i);
-                if (stack.isEmpty()) continue;
-                // If we find the card, return it
-                // if we find the deck, remember it
-                Item item = stack.getItem();
+        if (entity instanceof Player player) {
+            // Only search the inventory if config allows it
+            if (!TarotCards.CONFIG.require_card_in_curio) {
+                Inventory inv = player.getInventory();
+                // Check player for card and deck
+                for (int i = 0; i < inv.getContainerSize(); i++) {
+                    ItemStack stack = inv.getItem(i);
+                    if (stack.isEmpty()) continue;
+                    // If we find the card, return it
+                    // if we find the deck, remember it
+                    Item item = stack.getItem();
 
-                if (item instanceof TarotItem && isActivated(stack)) {
-                    activeCards.add(item);
-                } else if (stack.is(ItemInit.tarot_deck.get())) { // This will choose player inventory decks over curios
-                    deckStack = stack;
+                    if (item instanceof TarotItem && isActivated(stack)) {
+                        activeCards.add(item);
+                    } else if (stack.is(ItemInit.tarot_deck.get())) { // This will choose player inventory decks over curios
+                        deckStack = stack;
+                    }
                 }
             }
         }
@@ -102,38 +113,34 @@ public class TarotUtilPlatform {
         return activeCards;
     }
 
-    public static float handleOnHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
-        if (amount <= 0) return 0;
+    private static float processDamage(LivingEntity entity, @Nullable LivingEntity other, DamageSource source, float amount, TarotEffectTrigger trigger) {
+        if (amount <= 0 || !isValidTarget(entity)) return amount;
 
-        Set<Item> activeCards = getActiveTarots(player);
+        Set<Item> activeCards = getActiveTarots(entity);
+        if (activeCards.isEmpty()) return amount;
 
-        if (activeCards.isEmpty()) {
-            return amount;
-        }
-
+        float finalAmount = amount;
         for (Item item : activeCards) {
-            if (item instanceof TarotItem tarot && tarot.checkExtraConditions(player)) {
-               amount = tarot.onHurt(attacker, player, source, amount);
+            if (item instanceof TarotItem tarot && tarot.checkExtraConditions(entity)) {
+                finalAmount = trigger.apply(tarot, other, entity, source, finalAmount);
             }
         }
-        return amount;
+        return finalAmount;
     }
 
-    public static float handleOnAttack(Player player, LivingEntity victim, DamageSource source, float amount) {
-        if (amount <= 0) return 0;
+    public static float handleOnHurt(@Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
+        return processDamage(victim, attacker, source, amount,
+                (tarot, att, vic, src, amt) -> tarot.onHurt(att, vic, src, amt));
+    }
 
-        Set<Item> activeCards = getActiveTarots(player);
+    public static float handleOnAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
+        return processDamage(attacker, victim, source, amount,
+                (tarot, vic, att, src, amt) -> tarot.onAttack(att, vic, src, amt));
+    }
 
-        if (activeCards.isEmpty()) {
-            return amount;
-        }
-
-        for (Item item : activeCards) {
-            if (item instanceof TarotItem tarot && tarot.checkExtraConditions(player)) {
-                amount = tarot.onAttack(player, victim, source, amount);
-            }
-        }
-        return amount;
+    @FunctionalInterface
+    interface TarotEffectTrigger {
+        float apply(TarotItem tarot, @Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount);
     }
 
 //    public static float handleOnDamage(LivingEntity victim, DamageSource source, float amount) {

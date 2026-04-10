@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +23,8 @@ public class TheHighPriestessTarot extends TarotItem {
 
     // TODO: Reversed card logic - Downgrade enchantment? (Unsure if needed)
     @Override
-    protected void handleExtraLogic(Player player, boolean hasCard) {
-        if (hasCard) {
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {
+        if (entity instanceof Player player && hasCard) {
 
             //Get the held item to upgrade
             ItemStack upgradableItem = player.getMainHandItem().is(upgradable_enchantment) ? player.getMainHandItem() : (player.getOffhandItem().is(upgradable_enchantment) ? player.getOffhandItem() : null);

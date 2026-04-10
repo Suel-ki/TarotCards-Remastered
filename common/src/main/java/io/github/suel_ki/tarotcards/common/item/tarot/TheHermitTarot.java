@@ -28,8 +28,9 @@ public class TheHermitTarot extends TarotItem {
 
     private static final Supplier<AttributeModifier> attribute = () -> new AttributeModifier(HERMIT_UUID, "Tarot Card", TarotCards.CONFIG.cards.the_hermit_armorbonus, AttributeModifier.Operation.ADDITION);
 
-    public boolean checkExtraConditions(Player player) {
-        return !hasNearbyAllies(player) && super.checkExtraConditions(player);
+    @Override
+    public boolean checkExtraConditions(LivingEntity entity) {
+        return !hasNearbyAllies(entity) && super.checkExtraConditions(entity);
     }
 
     @Override
@@ -42,19 +43,19 @@ public class TheHermitTarot extends TarotItem {
         return attribute.get();
     }
 
-    private boolean hasNearbyAllies(Player player) {
+    private boolean hasNearbyAllies(LivingEntity entity) {
         double range = TarotCards.CONFIG.cards.the_hermit_allyrange;
-        AABB area = player.getBoundingBox().inflate(range);
+        AABB area = entity.getBoundingBox().inflate(range);
 
         TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight();
 
-        List<LivingEntity> entities = player.level().getNearbyEntities(LivingEntity.class, targeting, player, area);
+        List<LivingEntity> entities = entity.level().getNearbyEntities(LivingEntity.class, targeting, entity, area);
 
         for (LivingEntity e : entities) {
-            if (e.isAlliedTo(player)) {
+            if (e.isAlliedTo(entity) || entity.isAlliedTo(e)) {
                 return true;
             }
-            if (e instanceof Player ePlayer) {
+            if (e instanceof Player ePlayer && entity instanceof Player player) {
                 if (FTBTeamCompat.isSameTeamSafe(player, ePlayer)) {
                     return true;
                 }

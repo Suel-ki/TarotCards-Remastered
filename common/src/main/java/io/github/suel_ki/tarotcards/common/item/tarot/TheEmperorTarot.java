@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -19,7 +20,8 @@ public class TheEmperorTarot extends TarotItem {
 
     private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.the_emperpor_heroofvillagebonus, true, false);
 
-    protected void handleExtraLogic(Player player, boolean hasCard) {
+    @Override
+    protected void handleExtraLogic(LivingEntity player, boolean hasCard) {
         if (hasCard) {
             player.addEffect(effect.get());
         }
