@@ -7,11 +7,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 public class TheDevilTarot extends TarotItem {
 
-    public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
+    public float onAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         if (attacker!= null) {
 
             TarotCards.LOGGER.debug("{} - Inflict weakness", ItemInit.the_devil.get());

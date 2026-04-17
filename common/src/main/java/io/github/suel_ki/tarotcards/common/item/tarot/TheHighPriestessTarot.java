@@ -4,10 +4,14 @@ import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +19,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class TheHighPriestessTarot extends TarotItem {
@@ -24,8 +29,8 @@ public class TheHighPriestessTarot extends TarotItem {
 
     // TODO: Reversed card logic - Downgrade enchantment? (Unsure if needed)
     @Override
-    protected void handleExtraLogic(Player player, boolean hasCard) {
-        if (hasCard) {
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {
+        if (entity instanceof Player player && hasCard) {
 
             // Get the held item to upgrade
             ItemStack upgradableItem = player.getMainHandItem().is(upgradable_enchantment) ? player.getMainHandItem() : (player.getOffhandItem().is(upgradable_enchantment) ? player.getOffhandItem() : null);
@@ -45,29 +50,25 @@ public class TheHighPriestessTarot extends TarotItem {
             boolean isTaxFree = TarotCards.CONFIG.cards.the_highpriestess_taxfree;
             boolean skipMaxed = TarotCards.CONFIG.cards.the_highpriestess_skip_maxed;
 
+            List<Holder<Enchantment>> orderedList = getVisualOrderEnchantments(player.level().registryAccess(), enchantments);
+            Holder<Enchantment> firstVisible = orderedList.isEmpty() ? null : orderedList.getFirst();
             Holder<Enchantment> targetEnch = null;
             int currentLvl = 0;
 
-            if (skipMaxed) {
-                // Find the first enchantment that hasn't reached its level cap
-                for (Holder<Enchantment> enchHolder : enchantments.keySet()) {
-                    int lvl = enchantments.getLevel(enchHolder);
-                    int max = capEnchs ? (enchHolder.value().getMaxLevel() + extraLevels) : enchHolder.value().getMaxLevel();
-                    if (lvl < max) {
-                        targetEnch = enchHolder;
-                        currentLvl = lvl;
-                        break; // Target found, exit search
-                    }
-                }
-            } else {
-                // Get the first valid enchantment to level up
-                Optional<Holder<Enchantment>> first = enchantments.keySet().stream().min(Comparator.comparing(Holder::getRegisteredName));
-                if (first.isPresent()) {
-                    int lvl = enchantments.getLevel(first.get());
-                    int max = capEnchs ? (first.get().value().getMaxLevel() + extraLevels) : first.get().value().getMaxLevel();
-                    if (lvl < max) {
-                        targetEnch = first.get();
-                        currentLvl = lvl;
+            for (Holder<Enchantment> holder : orderedList) {
+                int lvl = enchantments.getLevel(holder);
+                int max = capEnchs ? (holder.value().getMaxLevel() + extraLevels) : holder.value().getMaxLevel();
+
+                if (lvl < max) {
+                    targetEnch = holder;
+                    currentLvl = lvl;
+                    if (skipMaxed) {
+                        break;
+                    } else {
+                        if (!holder.equals(firstVisible)) {
+                            targetEnch = null;
+                        }
+                        break;
                     }
                 }
             }
@@ -113,6 +114,28 @@ public class TheHighPriestessTarot extends TarotItem {
         EnchantmentHelper.updateEnchantments(item, mutable -> {
             mutable.set(ench, currentLvl + 1);
         });
+    }
+
+    private List<Holder<Enchantment>> getVisualOrderEnchantments(HolderLookup.Provider registries, ItemEnchantments enchantments) {
+        List<Holder<Enchantment>> list = new ArrayList<>();
+
+        Optional<HolderSet.Named<Enchantment>> tooltipOrder = registries.lookupOrThrow(Registries.ENCHANTMENT)
+                .get(EnchantmentTags.TOOLTIP_ORDER);
+
+        tooltipOrder.ifPresent(tag -> {
+            for (Holder<Enchantment> holder : tag) {
+                if (enchantments.getLevel(holder) > 0) {
+                    list.add(holder);
+                }
+            }
+        });
+
+        for (Holder<Enchantment> holder : enchantments.keySet()) {
+            if (!list.contains(holder)) {
+                list.add(holder);
+            }
+        }
+        return list;
     }
 
     /**

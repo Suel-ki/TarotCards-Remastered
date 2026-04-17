@@ -11,7 +11,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +25,9 @@ public class JusticeTarot extends TarotItem {
         return new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JUSTICE));
     }
 
-    //Make sure it is a living entity hurting a player
-	public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
+    //Make sure it is a living entity hurting a user
+    @Override
+	public float onHurt(@Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         //Damage taken from justice shouldnt be returned
         if (source.is(JUSTICE) || attacker == null) {
             return amount;
@@ -35,10 +35,10 @@ public class JusticeTarot extends TarotItem {
 
         amount = (float) (amount * TarotCards.CONFIG.cards.justice_damagemultiplier);
 
-        attacker.hurt(justice(player), amount);
+        attacker.hurt(justice(victim), amount);
 
         TarotCards.LOGGER.debug("{} - Returning damage", ItemInit.justice.get());
-        TarotCards.LOGGER.debug("From: {}, To: {} [{}]", player, attacker, attacker.getHealth());
+        TarotCards.LOGGER.debug("From: {}, To: {} [{}]", victim, attacker, attacker.getHealth());
         TarotCards.LOGGER.debug("Amount: {}", amount);
 
         return amount;

@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -16,7 +15,8 @@ import java.util.List;
 
 public class DeathTarot extends TarotItem {
 
-    public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
+    @Override
+    public float onAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         if (victim.getType().is(EntityTypeTags.UNDEAD)) {
             return amount;
         }

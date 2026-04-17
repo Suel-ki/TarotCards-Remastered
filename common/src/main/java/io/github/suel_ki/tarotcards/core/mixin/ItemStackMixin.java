@@ -3,6 +3,8 @@ package io.github.suel_ki.tarotcards.core.mixin;
 import io.github.suel_ki.tarotcards.common.item.tarot.TheMagicianTarot;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +29,19 @@ public abstract class ItemStackMixin {
 	public void hurtAndBreak(int damage, ServerLevel level, ServerPlayer player, Consumer<Item> onBreak, CallbackInfo ci) {
 		if (player != null && !player.level().isClientSide) {
 			if (TheMagicianTarot.handleItemDamage(this.copy(), player)) {
+				ci.cancel();
+			}
+		}
+	}
+
+	@Inject(
+			method = "hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V",
+			at = @At("HEAD"),
+			cancellable = true
+	)
+	public void hurtAndBreak(int amount, LivingEntity entity, EquipmentSlot slot, CallbackInfo ci) {
+		if (entity != null && !entity.level().isClientSide) {
+			if (TheMagicianTarot.handleItemDamage(this.copy(), entity)) {
 				ci.cancel();
 			}
 		}

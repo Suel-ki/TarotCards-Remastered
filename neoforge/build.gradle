@@ -41,6 +41,7 @@ dependencies {
 //    modImplementation "me.fzzyhmstrs:fzzy_config:${fzzyconfig_version}+neoforge"
 //    modRuntimeOnly "maven.modrinth:kotlin-for-forge:${kotlinforge_version}"
     modCompileOnly "curse.maven:ftb-teams-forge-404468:${ftbteam_id}"
+    modImplementation "maven.modrinth:touhou-little-maid:${touhoulittlemaid_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }

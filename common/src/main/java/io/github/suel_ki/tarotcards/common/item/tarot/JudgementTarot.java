@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public class JudgementTarot extends TarotItem {
 
     public static float handleOnDamage(LivingEntity entity, DamageSource source, float amount)  {
-        if (source.getEntity() instanceof Player attacker) {
+        if (source.getEntity() instanceof LivingEntity attacker) {
             if (hasTarot(attacker, ItemInit.judgement.get())) {
                 if (attacker.getRandom().nextDouble() < TarotCards.CONFIG.cards.judgement_damagechance) {
 

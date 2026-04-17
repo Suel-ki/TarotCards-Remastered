@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,7 +19,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -34,19 +33,20 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Post event) {
+    public static void onPlayerTick(EntityTickEvent.Post event) {
         if (event.getEntity().level().isClientSide()) return;
-        Player player = event.getEntity();
-        if (player.tickCount % TarotCards.CONFIG.tick_rate == 0) {
-            player.level().getProfiler().push("TarotCards");
+        if (event.getEntity() instanceof LivingEntity entity) {
+            if (entity.tickCount % TarotCards.CONFIG.tick_rate == 0) {
+                entity.level().getProfiler().push("TarotCards");
 
-            Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(player);
-            for (TarotItem tarot : TarotItem.ITEMS_CARDS) {
-                boolean hasThisCard = activeCardsSnapshot.contains(tarot);
-                tarot.handleTick(player, hasThisCard);
+                Set<Item> activeCardsSnapshot = TarotUtilPlatform.getActiveTarots(entity);
+                for (TarotItem tarot : TarotItem.ITEMS_CARDS) {
+                    boolean hasThisCard = activeCardsSnapshot.contains(tarot);
+                    tarot.handleTick(entity, hasThisCard);
+                }
+
+                entity.level().getProfiler().pop();
             }
-
-            player.level().getProfiler().pop();
         }
     }
 
@@ -56,16 +56,14 @@ public class EventHandler {
         DamageSource source = event.getSource();
         float amount = event.getAmount();
 
-        if (source.getEntity() instanceof Player attackerPlayer) {
-            amount = TarotUtilPlatform.handleOnAttack(attackerPlayer, victim, source, amount);
+        if (source.getEntity() instanceof LivingEntity attacker) {
+            amount = TarotUtilPlatform.handleOnAttack(attacker, victim, source, amount);
         }
 
-        if (victim instanceof Player playerVictim) {
-            Entity attacker = source.getEntity();
-            LivingEntity livingAttacker = (attacker instanceof LivingEntity le) ? le : null;
+        Entity attacker = source.getEntity();
+        LivingEntity livingAttacker = (attacker instanceof LivingEntity le) ? le : null;
 
-            amount = TarotUtilPlatform.handleOnHurt(livingAttacker, playerVictim, source, amount);
-        }
+        amount = TarotUtilPlatform.handleOnHurt(livingAttacker, victim, source, amount);
 
         event.setAmount(amount);
     }
@@ -74,12 +72,10 @@ public class EventHandler {
     public static void onLivingDamage(LivingDamageEvent.Pre event) {
         LivingEntity victim = event.getEntity();
         DamageSource source = event.getSource();
-        if (source.getEntity() instanceof Player) {
-            float amount = event.getNewDamage();
-          //  float amount = TarotUtilPlatform.handleOnDamage(event.getEntity(), event.getSource(), event.getAmount());
-            amount = JudgementTarot.handleOnDamage(victim, source, amount);
-            event.setNewDamage(amount);
-        }
+        float amount = event.getNewDamage();
+        //  float amount = TarotUtilPlatform.handleOnDamage(event.getEntity(), event.getSource(), event.getAmount());
+        amount = JudgementTarot.handleOnDamage(victim, source, amount);
+        event.setNewDamage(amount);
     }
 
     @SubscribeEvent

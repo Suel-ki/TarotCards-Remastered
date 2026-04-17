@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
@@ -17,12 +16,13 @@ import java.util.List;
 
 public class TheTowerTarot extends TarotItem {
 
-    public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
+    @Override
+    public float onHurt(@Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         if (source.is(DamageTypes.FALL)) {
             float negation = (float) (amount * (1 - TarotCards.CONFIG.cards.the_tower_damagenegation));
 
             TarotCards.LOGGER.debug("{} - Fall negation", ItemInit.the_tower.get());
-            TarotCards.LOGGER.debug("Negation: {}, For: {}", negation, player);
+            TarotCards.LOGGER.debug("Negation: {}, For: {}", negation, victim);
 
             return negation;
         }

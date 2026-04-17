@@ -1,6 +1,7 @@
 {
   "entities": [
-    "player"
+    "player",
+    "touhou_little_maid:maid"
   ],
   "slots": [
     "tarotcards/tarot"

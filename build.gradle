@@ -70,6 +70,7 @@ allprojects {
                 includeGroup "maven.modrinth"
             }
         }
+
         maven {
             url = "https://thedarkcolour.github.io/KotlinForForge/"
         }

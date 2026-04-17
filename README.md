@@ -71,7 +71,7 @@ By default, cards have a 20% chance to spawn once in:
 
 ## The Tarot Deck
 Holds one of each card for easy collection. Can be equipped as curio Applies their effect even while the cards are inside. Also fire immune!
-There's currently an issue with the Tarot Deck being empty when switching to creative when on a server. Looking for a fix is taking longer than expected, its probably an issue with forge. I recommend not using the deck if you're planning to switch game modes.
+~~There's currently an issue with the Tarot Deck being empty when switching to creative when on a server. Looking for a fix is taking longer than expected, its probably an issue with forge. I recommend not using the deck if you're planning to switch game modes.~~(Fixed)
 
 ## Config
 ### General

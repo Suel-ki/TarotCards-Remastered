@@ -6,10 +6,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -33,10 +33,10 @@ public class TheSunTarot extends TarotItem {
     }
 
     @Override
-    protected void onModifierRemoved(Player player, Holder<Attribute> attr) {
+    protected void onModifierRemoved(LivingEntity entity, Holder<Attribute> attr) {
         if (attr == Attributes.MAX_HEALTH) {
-            if (player.getHealth() > player.getMaxHealth()) {
-                player.setHealth(player.getMaxHealth());
+            if (entity.getHealth() > entity.getMaxHealth()) {
+                entity.setHealth(entity.getMaxHealth());
             }
         }
     }

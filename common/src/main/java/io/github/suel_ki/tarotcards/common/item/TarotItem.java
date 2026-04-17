@@ -3,6 +3,7 @@ package io.github.suel_ki.tarotcards.common.item;
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.core.accessories.AccessoriesHandler;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
+import io.github.suel_ki.tarotcards.core.platform.TarotUtilPlatform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
@@ -81,29 +82,31 @@ public abstract class TarotItem extends Item {
     /**
      * If the specified player has the given tarot on them or in their Tarot Deck.
      */
-    public static boolean hasTarot(Player player, Item tarot) {
-        if (player == null) {
+    public static boolean hasTarot(LivingEntity entity, Item tarot) {
+        if (!TarotUtilPlatform.isValidTarget(entity)) {
             return false;
         }
 
-        if (AccessoriesHandler.hasAccessoryActivated(player, tarot)) return true;
+        if (AccessoriesHandler.hasAccessoryActivated(entity, tarot)) return true;
 
         // If they have the deck in a curio slot, save it for checking later
-        ItemStack deck = AccessoriesHandler.getDeck(player);
+        ItemStack deck = AccessoriesHandler.getDeck(entity);
 
         // Only search the inventory if config allows it
-        if (!TarotCards.CONFIG.require_card_in_curio) {
-            Inventory inv = player.getInventory();
-            // Check player for card and deck
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                ItemStack stack = inv.getItem(i);
-                if (stack.isEmpty()) continue;
-                // If we find the card, return it
-                // if we find the deck, remember it
-                if (stack.is(tarot)) {
-                    if (isActivated(stack)) return true;
-                } else if (stack.is(ItemInit.tarot_deck.get())) { // This will choose player inventory decks over curios
-                    deck = stack;
+        if (entity instanceof Player player) {
+            if (!TarotCards.CONFIG.require_card_in_curio) {
+                Inventory inv = player.getInventory();
+                // Check player for card and deck
+                for (int i = 0; i < inv.getContainerSize(); i++) {
+                    ItemStack stack = inv.getItem(i);
+                    if (stack.isEmpty()) continue;
+                    // If we find the card, return it
+                    // if we find the deck, remember it
+                    if (stack.is(tarot)) {
+                        if (isActivated(stack)) return true;
+                    } else if (stack.is(ItemInit.tarot_deck.get())) { // This will choose player inventory decks over curios
+                        deck = stack;
+                    }
                 }
             }
         }
@@ -130,41 +133,43 @@ public abstract class TarotItem extends Item {
         return false;
     }
 
-    public void handleTick(Player player, boolean hasCard) {
+    public void handleTick(LivingEntity entity, boolean hasCard) {
         // COMBINE: Must be in inventory AND meet custom conditions
-        boolean isTrulyActive = hasCard && checkExtraConditions(player);
+        boolean isTrulyActive = hasCard && checkExtraConditions(entity);
 
-        updateAttributes(player, isTrulyActive);
-        handleExtraLogic(player, isTrulyActive);
+        updateAttributes(entity, isTrulyActive);
+        handleExtraLogic(entity, isTrulyActive);
     }
 
     /**
      * Subclasses override this to add unique requirements (like being alone).
      * @return true by default.
      */
-    public boolean checkExtraConditions(Player player) {
+    public boolean checkExtraConditions(LivingEntity entity) {
 
-        if (TarotCards.CONFIG.level_lock) {
-            int requiredLevel = TarotCards.CONFIG.min_xp_level_required.getOrDefault(getCacheId(), 0);
-            if (player.experienceLevel < requiredLevel) {
-                return false;
+        if (entity instanceof Player player) {
+            if (TarotCards.CONFIG.level_lock) {
+                int requiredLevel = TarotCards.CONFIG.min_xp_level_required.getOrDefault(getCacheId(), 0);
+                if (player.experienceLevel < requiredLevel) {
+                    return false;
+                }
             }
-        }
 
-        if (TarotCards.CONFIG.advancement_lock) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                String advPath = TarotCards.CONFIG.required_advancements.get(getCacheId());
+            if (TarotCards.CONFIG.advancement_lock) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    String advPath = TarotCards.CONFIG.required_advancements.get(getCacheId());
 
-                if (advPath != null && !advPath.isEmpty()) {
-                    ResourceLocation advId = ResourceLocation.parse(advPath);
-                    AdvancementHolder advancement = serverPlayer.getServer().getAdvancements().get(advId);
+                    if (advPath != null && !advPath.isEmpty()) {
+                        ResourceLocation advId = ResourceLocation.parse(advPath);
+                        AdvancementHolder advancement = serverPlayer.getServer().getAdvancements().get(advId);
 
-                    if (advancement != null) {
-                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
-                            return false;
+                        if (advancement != null) {
+                            if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                                return false;
+                            }
+                        } else {
+                            TarotCards.LOGGER.warn("Advancement not found: '{}' for tarot card: '{}'. Please check your config", advPath, getCacheId());
                         }
-                    } else {
-                        TarotCards.LOGGER.warn("Advancement not found: '{}' for tarot card: '{}'. Please check your config", advPath, getCacheId());
                     }
                 }
             }
@@ -176,26 +181,27 @@ public abstract class TarotItem extends Item {
     /**
      * Will add or remove attribute modifiers if the player has the tarot.
      */
-    protected void updateAttributes(Player player, boolean hasCard) {
+    protected void updateAttributes(LivingEntity entity, boolean hasCard) {
         AttributeModifier mod = getModifier();
         if (mod == null) return; // Not all cards might have attribute modifiers
 
         Holder<Attribute> targetAttr = getTargetAttribute();
         if (targetAttr == null) return;
+        if (entity.getAttribute(targetAttr) == null) return;
 
-        AttributeInstance inst = player.getAttribute(getTargetAttribute());
+        AttributeInstance inst = entity.getAttribute(getTargetAttribute());
         if (inst == null) return;
 
         boolean hasMod = inst.hasModifier(mod.id());
 
         if (hasCard && !hasMod) {
             inst.addTransientModifier(mod);
-            onModifierAdded(player, targetAttr);
-            TarotCards.LOGGER.debug("Added modifier {} to player {}", mod.id(), player.getName().getString());
+            onModifierAdded(entity, targetAttr);
+            TarotCards.LOGGER.debug("Added modifier {} to entity {}", mod.id(), entity.getName().getString());
         } else if (!hasCard && hasMod) {
             inst.removeModifier(mod.id());
-            onModifierRemoved(player, targetAttr);
-            TarotCards.LOGGER.debug("Removed modifier {} from player {}", mod.id(), player.getName().getString());
+            onModifierRemoved(entity, targetAttr);
+            TarotCards.LOGGER.debug("Removed modifier {} from entity {}", mod.id(), entity.getName().getString());
         }
     }
 
@@ -204,17 +210,17 @@ public abstract class TarotItem extends Item {
     protected Holder<Attribute> getTargetAttribute() { return null; }
     protected AttributeModifier getModifier() { return null; }
 
-    protected void onModifierAdded(Player player, Holder<Attribute> attr) {}
-    protected void onModifierRemoved(Player player, Holder<Attribute> attr) {}
+    protected void onModifierAdded(LivingEntity entity, Holder<Attribute> attr) {}
+    protected void onModifierRemoved(LivingEntity entity, Holder<Attribute> attr) {}
 
     // Optional: for cards with unique logic
-    protected void handleExtraLogic(Player player, boolean hasCard) {}
+    protected void handleExtraLogic(LivingEntity entity, boolean hasCard) {}
 
-    public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
+    public float onAttack(LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         return amount;
     }
 
-    public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
+    public float onHurt(@Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
         return amount;
     }
 

@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +16,16 @@ import java.util.List;
 
 public class TheHangedManTarot extends TarotItem {
 
-    public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
-        if (!player.level().isClientSide()) {
+    @Override
+    public float onHurt(@Nullable LivingEntity attacker, LivingEntity victim, DamageSource source, float amount) {
+        if (!victim.level().isClientSide()) {
             int xpamount = (int) Math.min(amount * TarotCards.CONFIG.cards.the_hanged_man_xpratio, TarotCards.CONFIG.cards.the_hanged_man_xpcap);
 
             TarotCards.LOGGER.debug("{} - Damage to xp orb", ItemInit.the_hanged_man.get());
-            TarotCards.LOGGER.debug("Amount: {}, For: {}", xpamount, player);
+            TarotCards.LOGGER.debug("Amount: {}, For: {}", xpamount, victim);
 
-            ExperienceOrb orb = new ExperienceOrb(player.level(), player.getX(), player.getY(), player.getZ(), xpamount);
-            player.level().addFreshEntity(orb);
+            ExperienceOrb orb = new ExperienceOrb(victim.level(), victim.getX(), victim.getY(), victim.getZ(), xpamount);
+            victim.level().addFreshEntity(orb);
         }
 
         return amount;
