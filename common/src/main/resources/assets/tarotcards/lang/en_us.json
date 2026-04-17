@@ -10,6 +10,7 @@
   "item.tarotcards.strength.desc": "Strength %d.",
   "item.tarotcards.tarot_deck": "Tarot Deck",
   "item.tarotcards.tarot_deck.desc": "Keeps your precious cards safe!",
+  "item.tarotcards.tarot_deck.shift.desc": "§7Hold §6[Shift]§7 to view cards in deck",
   "item.tarotcards.temperance": "Tarot : Temperance",
   "item.tarotcards.temperance.desc": "%d%% Hunger reduction.",
   "item.tarotcards.the_chariot": "Tarot : The Chariot",

@@ -10,6 +10,7 @@
   "item.tarotcards.strength.desc": "力量 +%d。",
   "item.tarotcards.tarot_deck": "塔罗牌牌组",
   "item.tarotcards.tarot_deck.desc": "保护你珍贵的牌！",
+  "item.tarotcards.tarot_deck.shift.desc": "§7按下 §6[Shift]§7 揭示其中的卡牌",
   "item.tarotcards.temperance": "塔罗牌：节制",
   "item.tarotcards.temperance.desc": "减少 %d%% 饥饿值。",
   "item.tarotcards.the_chariot": "塔罗牌：战车",
