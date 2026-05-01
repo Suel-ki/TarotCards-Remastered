@@ -6,15 +6,15 @@
 		"XZX"
 	],
 	"key": {
-		"X": {
-			"item": "minecraft:gold_nugget"
-		},
-		"Z": {
-			"item": "minecraft:paper"
-		},
-		"O": {
-			"item": "minecraft:chest"
-		}
+		"X": [
+			"minecraft:gold_nugget"
+		],
+		"Z": [
+			"minecraft:paper"
+		],
+		"O": [
+			"minecraft:chest"
+		]
 	},
 	"result": {
 		"count": 1,
