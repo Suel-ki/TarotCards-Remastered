@@ -46,7 +46,8 @@ public class TarotDeckScreen extends AbstractContainerScreen<TarotDeckMenu> {
     @Override
     protected void renderLabels(GuiGraphics matrixStack, int mouseX, int mouseY) {
         Component text = Component.translatable("item.tarotcards.tarot_deck");
-        matrixStack.drawString(Minecraft.getInstance().font, text, this.imageWidth / 2 - Minecraft.getInstance().font.width(text) / 2, 8, 0xfff699);
+        matrixStack.drawString(this.font, text, this.imageWidth / 2 - Minecraft.getInstance().font.width(text) / 2, 8, 0xfffff699);
+        matrixStack.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
     }
 
     @Override
