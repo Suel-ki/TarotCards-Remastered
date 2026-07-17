@@ -72,6 +72,7 @@
   "tarotcards.config.advancement_lock.desc": "如果开启，玩家必须完成指定的进度才能激活塔罗牌的效果",
   "tarotcards.config.min_xp_level_required.desc": "设置每张塔罗牌所需的最小经验等级",
   "tarotcards.config.required_advancements.desc": "设置每张塔罗牌对应的成就路径。若不填或成就无效则默认无门槛",
+  "tarotcards.config.effect_based_targeting.desc": "开启后，正面效果仅作用于玩家与盟友，负面效果仅作用于敌对生物",
 
   "tarotcards.config.loot": "战利品",
   "tarotcards.config.loot.target_loots.desc": "塔罗牌将从这个列表的战利品表中生成（仅Fabric）",
@@ -88,7 +89,8 @@
   "tarotcards.config.cards.the_chariot_speedboost.desc": "基础速度增加百分比 (0.5 = +50%)",
   "tarotcards.config.cards.the_devil_weaknessamplifier.desc": "效果等级 (1 = II)",
   "tarotcards.config.cards.the_emperpor_heroofvillagebonus.desc": "效果等级 (1 = II)",
-  "tarotcards.config.cards.the_empress_range.desc": "动物进入繁殖模式所需的距离",
+  "tarotcards.config.cards.the_empress_range.desc": "动物自动繁殖与幼年动物加速成长的作用范围",
+  "tarotcards.config.cards.the_empress_breeding_enabled.desc": "是否允许附近的动物自动进入繁殖状态",
   "tarotcards.config.cards.the_fool_jumpboost.desc": "效果等级 (2 = III)",
   "tarotcards.config.cards.the_hanged_man_xpratio.desc": "伤害转化为经验值的比例",
   "tarotcards.config.cards.the_hanged_man_xpcap.desc": "单次伤害可获得的经验值上限",
