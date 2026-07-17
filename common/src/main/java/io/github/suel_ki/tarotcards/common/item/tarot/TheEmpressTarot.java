@@ -9,6 +9,8 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
+
 public class TheEmpressTarot extends TarotItem {
 
     public TheEmpressTarot(Properties properties) {
@@ -19,22 +21,25 @@ public class TheEmpressTarot extends TarotItem {
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {
             if (player.level() instanceof ServerLevel level) {
-                level.getNearbyEntities(Animal.class, TargetingConditions.forNonCombat(), player, player.getBoundingBox().inflate(TarotCards.CONFIG.cards.the_empress_range)).forEach(e -> {
-                    if (e.canFallInLove() && e.getAge() == 0) {
+                double range = TarotCards.CONFIG.cards.the_empress_range;
+                boolean breeding = TarotCards.CONFIG.cards.the_empress_breeding_enabled;
 
-                        TarotCards.LOGGER.debug("{} - Set in love", ItemInit.the_empress.get());
-                        TarotCards.LOGGER.debug("Animal: {}", e);
-
-                        e.setInLove(player);
-                    }
+                List<Animal> nearbyAnimals = level.getNearbyEntities(Animal.class, TargetingConditions.forNonCombat(), player, player.getBoundingBox().inflate(range));
+                for (Animal e : nearbyAnimals) {
                     if (e.isBaby()) {
 
                         TarotCards.LOGGER.debug("{} - Feed baby", ItemInit.the_empress.get());
                         TarotCards.LOGGER.debug("Animal: {}", e);
+                        TarotCards.LOGGER.debug("{} - Feed baby animal: {}", ItemInit.the_empress.get(), e);
 
                         e.ageUp(AgeableMob.getSpeedUpSecondsWhenFeeding(-e.getAge()), true);
+                    } else if (breeding && e.canFallInLove()) {
+
+                        TarotCards.LOGGER.debug("{} - Set animal in love: {}", ItemInit.the_empress.get(), e);
+
+                        e.setInLove(player);
                     }
-                });
+                }
             }
         }
     }

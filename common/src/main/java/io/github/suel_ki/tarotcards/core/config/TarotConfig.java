@@ -76,6 +76,7 @@ public class TarotConfig extends Config {
         public double the_chariot_speedboost = 0.2D;
         @ValidatedDouble.Restrict(min = 0D, max = 256D, type = ValidatedNumber.WidgetType.TEXTBOX)
         public double the_empress_range = 3D;
+        public boolean the_empress_breeding_enabled = true;
         @ValidatedInt.Restrict(min = 0, max = 20, type = ValidatedNumber.WidgetType.TEXTBOX)
         public int the_emperpor_heroofvillagebonus = 2;
         @ValidatedDouble.Restrict(min = 0D, max = 1D, type = ValidatedNumber.WidgetType.TEXTBOX)
