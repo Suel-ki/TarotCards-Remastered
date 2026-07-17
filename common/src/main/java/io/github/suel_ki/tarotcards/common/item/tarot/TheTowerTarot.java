@@ -22,6 +22,7 @@ public class TheTowerTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
         if (source.is(DamageTypes.FALL)) {
             float negation = (float) (amount * (1 - TarotCards.CONFIG.cards.the_tower_damagenegation));

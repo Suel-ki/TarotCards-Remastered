@@ -21,6 +21,7 @@ public class DeathTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     public float onAttack(Player attacker, LivingEntity victim, DamageSource source, float amount) {
         if (victim.getType().is(EntityTypeTags.UNDEAD)) {
             return amount;

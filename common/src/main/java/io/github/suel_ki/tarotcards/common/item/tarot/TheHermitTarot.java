@@ -32,6 +32,7 @@ public class TheHermitTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     public boolean checkExtraConditions(Player player) {
         return !hasNearbyAllies(player) && super.checkExtraConditions(player);
     }

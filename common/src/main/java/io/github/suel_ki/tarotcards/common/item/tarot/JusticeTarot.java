@@ -32,6 +32,7 @@ public class JusticeTarot extends TarotItem {
     }
 
     //Make sure it is a living entity hurting a player
+    @Override
 	public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
         //Damage taken from justice shouldnt be returned
         if (source.is(JUSTICE) || attacker == null) {

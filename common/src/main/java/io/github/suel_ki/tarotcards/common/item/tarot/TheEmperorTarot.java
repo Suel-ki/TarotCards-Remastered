@@ -22,6 +22,7 @@ public class TheEmperorTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {
             player.addEffect(effect.get());

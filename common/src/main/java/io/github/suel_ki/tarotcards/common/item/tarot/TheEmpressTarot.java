@@ -15,6 +15,7 @@ public class TheEmpressTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     protected void handleExtraLogic(Player player, boolean hasCard) {
         if (hasCard) {
             if (player.level() instanceof ServerLevel level) {

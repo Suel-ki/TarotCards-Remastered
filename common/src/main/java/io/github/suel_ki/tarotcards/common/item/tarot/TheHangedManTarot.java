@@ -22,6 +22,7 @@ public class TheHangedManTarot extends TarotItem {
         super(properties);
     }
 
+    @Override
     public float onHurt(@Nullable LivingEntity attacker, Player player, DamageSource source, float amount) {
         if (!player.level().isClientSide()) {
             int xpamount = (int) Math.min(amount * TarotCards.CONFIG.cards.the_hanged_man_xpratio, TarotCards.CONFIG.cards.the_hanged_man_xpcap);
