@@ -2,6 +2,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.helper.TargetingHelper;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -9,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -35,8 +35,9 @@ public class TheWorldTarot extends TarotItem {
             if (player.level() instanceof ServerLevel level) {
                 double range = TarotCards.CONFIG.cards.the_world_range;
                 AABB area = player.getBoundingBox().inflate(range);
-                TargetingConditions.Selector effecterSelector = (entity, serverLevel) -> shouldAffect(player, entity);
-                List<LivingEntity> entities = level.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT.copy().selector(effecterSelector), player, area);
+                TargetingConditions targeting = TargetingConditions.DEFAULT
+                        .selector(TargetingHelper.getFilter(player, TargetingHelper.EffectType.NEGATIVE));
+                List<LivingEntity> entities = level.getNearbyEntities(LivingEntity.class, targeting, player, area);
 
                 for (LivingEntity e : entities) {
                     TarotCards.LOGGER.debug("{} - Slow nearby", ItemInit.the_world.get());
@@ -46,26 +47,6 @@ public class TheWorldTarot extends TarotItem {
                 }
             }
         }
-    }
-
-    private boolean shouldAffect(Player player, LivingEntity e) {
-        if (e.isAlliedTo(player)) return false;
-
-        if (e instanceof OwnableEntity ownable) {
-            var owner = ownable.getOwner();
-            if (owner != null) {
-                if (owner.equals(player)) return false;
-
-                if (player.isAlliedTo(owner)) return false;
-                if (owner instanceof Player pOwner) return player.canHarmPlayer(pOwner);
-            }
-        }
-
-        if (e instanceof Player ePlayer) {
-            return player.canHarmPlayer(ePlayer);
-        }
-
-        return true;
     }
 
     @Override

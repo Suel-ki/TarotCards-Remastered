@@ -2,6 +2,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.helper.TargetingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -52,28 +53,13 @@ public class TheHermitTarot extends TarotItem {
             double range = TarotCards.CONFIG.cards.the_hermit_allyrange;
             AABB area = player.getBoundingBox().inflate(range);
 
-            TargetingConditions.Selector allySelector = (entity, serverLevel) -> {
-                if (entity == player) return false;
+            TargetingConditions targeting = TargetingConditions.forNonCombat()
+                    .ignoreLineOfSight()
+                    .selector((e, l) -> TargetingHelper.isAlly(player, e));
 
-                if (!entity.isAlive()) return false;
+            List<LivingEntity> allies = level.getNearbyEntities(LivingEntity.class, targeting, player, area);
 
-                if (entity.isAlliedTo(player)) return true;
-
-//                if (entity instanceof OwnableEntity ownable) {
-//                    LivingEntity owner = ownable.getOwner();
-//                    if (owner != null && (owner.equals(player) || player.isAlliedTo(owner))) {
-//                        return true;
-//                    }
-//                }
-
-                return false;
-            };
-
-            TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight().selector(allySelector);
-
-            List<LivingEntity> entities = level.getNearbyEntities(LivingEntity.class, targeting, player, area);
-
-            return !entities.isEmpty();
+            return !allies.isEmpty();
         }
         return false;
     }

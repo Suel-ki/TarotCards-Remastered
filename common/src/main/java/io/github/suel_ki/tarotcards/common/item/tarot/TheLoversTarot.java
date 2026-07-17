@@ -2,6 +2,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
+import io.github.suel_ki.tarotcards.core.helper.TargetingHelper;
 import io.github.suel_ki.tarotcards.core.init.ItemInit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,6 @@ import java.util.function.Supplier;
 
 public class TheLoversTarot extends TarotItem {
 
-    private static final TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting();
     private static final Supplier<MobEffectInstance> effect = () -> new MobEffectInstance(MobEffects.REGENERATION, TarotCards.CONFIG.tick_rate + 20, TarotCards.CONFIG.cards.the_lovers_regenamplifier, true, false, false);
 
     public TheLoversTarot(Properties properties) {
@@ -35,8 +35,8 @@ public class TheLoversTarot extends TarotItem {
             if (player.level() instanceof ServerLevel level) {
                 double range = TarotCards.CONFIG.cards.the_lovers_range;
                 AABB area = player.getBoundingBox().inflate(range);
-                TargetingConditions.Selector allySelector = (entity, serverLevel) -> shouldAffect(player, entity);
-                TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting().selector(allySelector);
+                TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight().ignoreInvisibilityTesting()
+                        .selector(TargetingHelper.getFilter(player, TargetingHelper.EffectType.POSITIVE));
                 List<LivingEntity> entities = level.getNearbyEntities(LivingEntity.class, targeting, player, area);
 
                 for (LivingEntity e : entities) {
@@ -47,10 +47,6 @@ public class TheLoversTarot extends TarotItem {
                 }
             }
         }
-    }
-
-    private boolean shouldAffect(Player player, LivingEntity e) {
-        return e.isAlliedTo(player);
     }
 
     @Override

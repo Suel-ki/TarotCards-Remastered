@@ -33,6 +33,7 @@ public class TarotConfig extends Config {
     public boolean tarot_deck_applies_effects = true;
     public boolean level_lock = false;
     public boolean advancement_lock = false;
+    public boolean effect_based_targeting= false;
 
     public ValidatedIdentifierMap<Integer> min_xp_level_required = new ValidatedIdentifierMap<>(
             new LinkedHashMap<>(),
