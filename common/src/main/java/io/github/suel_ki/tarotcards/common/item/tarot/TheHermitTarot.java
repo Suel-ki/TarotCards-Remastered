@@ -2,7 +2,7 @@ package io.github.suel_ki.tarotcards.common.item.tarot;
 
 import io.github.suel_ki.tarotcards.TarotCards;
 import io.github.suel_ki.tarotcards.common.item.TarotItem;
-import io.github.suel_ki.tarotcards.core.compat.FTBTeamCompat;
+import io.github.suel_ki.tarotcards.core.helper.TargetingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.phys.AABB;
@@ -45,21 +44,13 @@ public class TheHermitTarot extends TarotItem {
         double range = TarotCards.CONFIG.cards.the_hermit_allyrange;
         AABB area = entity.getBoundingBox().inflate(range);
 
-        TargetingConditions targeting = TargetingConditions.forNonCombat().ignoreLineOfSight();
+        TargetingConditions targeting = TargetingConditions.forNonCombat()
+                .ignoreLineOfSight()
+                .selector(e -> TargetingHelper.isAlly(entity, e));
 
-        List<LivingEntity> entities = entity.level().getNearbyEntities(LivingEntity.class, targeting, entity, area);
+        List<LivingEntity> allies = entity.level().getNearbyEntities(LivingEntity.class, targeting, entity, area);
 
-        for (LivingEntity e : entities) {
-            if (e.isAlliedTo(entity) || entity.isAlliedTo(e)) {
-                return true;
-            }
-            if (e instanceof Player ePlayer && entity instanceof Player player) {
-                if (FTBTeamCompat.isSameTeamSafe(player, ePlayer)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return !allies.isEmpty();
     }
 
 	@Override
